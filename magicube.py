@@ -14,9 +14,6 @@ def generate_n_stack(n: int, straight: bool = False):
     return retval
     pass    
 
-#XYZ
-judgement_vectors : list[list[int]] = [[1,0,0],[0,1,0],[0,0,1],[1,1,0],[1,0,1],[0,1,1],[1,-1,0],[1,0,-1],[0,-1,1],[1,1,1][-1,1,1][1,-1,1][-1,-1,1]]
-
 #X < > (Kiri kanan); Y /\ \/ (atas bawah); Z (+) (-) (depan belakang)
 #therefore Magicube.numbers[Z][Y][X]
 
