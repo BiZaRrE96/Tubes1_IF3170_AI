@@ -14,7 +14,7 @@ def fitness(cube: m.Magicube) -> float:
         for vector in path.list():
             temp += cube.get(vector.x,vector.y,vector.z)
         value += [temp]
-    return stdev(value)
+    return -stdev(value)
 
 finish : bool = False
 
@@ -28,10 +28,12 @@ def bogo_search(size : int) -> None:
     else:
         cube = m.Magicube(size)
         
-    if fitness(cube) == 0:
-        cube.print()
-        print("FINISH!")
-        finish = True
+    if fitness(cube) >= -50:
+        if not finish:
+            cube.print()
+            print("FINISH!")
+            print(fitness(cube))
+            finish = True
     return
 
 def bogo_supersearch(n : int):
@@ -59,6 +61,5 @@ def bogo_supersearch(n : int):
         if (clock // 1000 > 0):
             print("loop",ix)
             clock = clock % 1000
-        
-#print(fitness(m.Magicube(custom=m.true_example)))
-bogo_supersearch(3)
+
+#bogo_supersearch(5)
