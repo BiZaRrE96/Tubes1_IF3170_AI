@@ -94,7 +94,7 @@ class Magicube:
                 raise ex.IllegalInputException(f"{chr(ord('x') + (i % 3)).upper()}")
         return self.numbers[z][y][x]
     
-    def __copy__(self):
+    def copy(self):
         new_cube : Magicube = Magicube(self.size)
         new_cube.numbers = copy.deepcopy(self.numbers)
         return new_cube
