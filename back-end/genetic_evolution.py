@@ -11,15 +11,20 @@ from random import randint
 from hilltest import generate_vector
 
 class wheel_spinner:
-    def __init__(self, value_list: list[float]) -> None:
+    def __init__(self, value_list: list[float], flip : bool = False) -> None:
         self.total_value = sum(value_list,0)
-        self.floor_values : list[float] = [(sum([value_list[i] for i in range(j)]) + value_list[j]) for j in range(len(value_list))]
+        modifier = 0
+        if flip:
+            self.total_value *= (-1)
+            modifier = self.total_value
+        self.floor_values : list[float] = [(sum([value_list[i] + modifier for i in range(j)]) + value_list[j] + modifier) for j in range(len(value_list))]
+
         pass
     
     def spin(self) -> int:
         target : float = random() * self.total_value
         i = 0
-        print("TARGET :",target)
+        #print("TARGET :",target)
         while (target >= self.floor_values[i]):
             i += 1
         return i
@@ -73,6 +78,20 @@ def mutate(cube : Magicube, severity : float) -> None:
 #2 strategies : disintegrate and cut, fix cube gets called by breed
 #DONT FORGET TO COPY
 def disintegrate(m1 : Magicube, m2 : Magicube) -> Magicube:
+    #semakin bagus cube, semakin tinggi kemungkinan nilainya diambil
+    f1 = fitness(m1)
+    f2 = fitness(m2)
+    picker = wheel_spinner([f1,f2],True)
+    maxpos = m1.size**3
+    numberlist : list[int] = []
+    
+    #begin splicing
+    pick = [m1,m2]
+    for i in range(maxpos):
+        pos : t.Vector3 = generate_vector(i,m1.size)
+        numberlist += [pick[picker.spin()].get(pos.x,pos.y,pos.z)]
+    
+    return Magicube(m1.size,custom=numberlist)
     pass
 
 def splice(m1 : Magicube, m2 : Magicube) -> Magicube:
@@ -91,23 +110,36 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
     fitness_values : list[float] = []
     for cube in candidates:
         fitness_values += [fitness(cube)]
-    wheel : wheel_spinner = wheel_spinner(fitness_values)
+    wheel : wheel_spinner = wheel_spinner(fitness_values,True)
     
     retval : list[Magicube] = []
     #splice until have same ammount as supplied candidates or speciffied times
     for i in range(max_itter):
-        child = splice_method(candidates[wheel.spin(),wheel.spin()])
+        child = splice_method(candidates[wheel.spin()],candidates[wheel.spin()])
+        
+        #SEMAKIN JELEK NILAI CUBE, SEMAKIN TINGGI TINGKAT MUTASI
+        #FOR THE TIME BEING IM NOT IMPLEMENTING THE COMPLEX MUTATION DECISIONS
+        #correction : The better the cube is compared to its parrent, the less mutation it will recieve
+        
+        fix_cube(child)
         retval += [child]
     #start breeding lmao
+    return retval
     pass
 
 #testing artifacts
 
 '''
-n = 2
-testcube = Magicube(n)
-testcube.print()
-print("INTO")
-mutate(testcube,0.20)
-testcube.print()
+n = 5
+cube_a = Magicube(n)
+cube_b = Magicube(n)
+
+print("A :",fitness(cube_a))
+# cube_a.print()
+print("B :",fitness(cube_b))
+# cube_b.print()
+
+for cube in breed([cube_a,cube_b],disintegrate):
+    print("Cube! :", fitness(cube))
+    # cube.print()
 '''
