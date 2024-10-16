@@ -12,6 +12,7 @@ cube : m.Magicube = m.Magicube(n)
 def generate_vector(n: int, size: int) -> t.Vector3:
     return t.Vector3([n % size, n // (size) % size , n // (size**2)])
 
+'''
 try:
     for i in range(MAX_ITTERATION):
         if ma.fitness(cube) >= -0.0:
@@ -37,3 +38,4 @@ try:
         print("Curval :",ma.fitness(cube))
 except e:
     cube.print()
+'''
