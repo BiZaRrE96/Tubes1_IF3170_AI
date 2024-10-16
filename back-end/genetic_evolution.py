@@ -4,6 +4,9 @@ from random import choice
 import traversal as t
 from magicube_adder import fitness
 from typing import Callable
+from math import exp
+from math import log
+from math import e as euler
 
 #testing purposes only
 from random import randint
@@ -114,21 +117,36 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
     
     retval : list[Magicube] = []
     #splice until have same ammount as supplied candidates or speciffied times
+    #candidate numbers :
+    c1 = wheel.spin()
+    c2 = wheel.spin()
     for i in range(max_itter):
-        child = splice_method(candidates[wheel.spin()],candidates[wheel.spin()])
-        
+        if (c1 != c2): #skip splicing if its the same
+            child = splice_method(candidates[c1],candidates[c2])
+        else:
+            child = candidates[c1].copy()
+        fix_cube(child)
+
         #SEMAKIN JELEK NILAI CUBE, SEMAKIN TINGGI TINGKAT MUTASI
         #FOR THE TIME BEING IM NOT IMPLEMENTING THE COMPLEX MUTATION DECISIONS
-        #correction : The better the cube is compared to its parrent, the less mutation it will recieve
         
-        fix_cube(child)
+        #correction : The better the cube is compared to its parrent, the less mutation it will recieve
+        #factors : distance from 0, distance from parent
+        
+        #THIS VERSION : PURELY BY DISTANCE FROM 0
+        # y = exp(-x*loge(2)/125)-1
+        f = fitness(child)
+        mutation_factor = exp(-f*log(2,euler)/(child.size**3))-1
+        mutation_factor = mutation_factor * mutation_factor
+        #mutation only swaps two positions so no need to refix
+        mutate(child,mutation_factor)
+        
         retval += [child]
     #start breeding lmao
     return retval
     pass
 
 #testing artifacts
-
 '''
 n = 5
 cube_a = Magicube(n)
@@ -139,7 +157,14 @@ print("A :",fitness(cube_a))
 print("B :",fitness(cube_b))
 # cube_b.print()
 
-for cube in breed([cube_a,cube_b],disintegrate):
-    print("Cube! :", fitness(cube))
-    # cube.print()
+test_value : list[float] = []
+for i in range(5):
+    test_value += [fitness(breed([cube_a,cube_b],disintegrate, 1)[0])]
+print(sum(test_value)/len(test_value))
 '''
+
+listc = [Magicube(3),Magicube(3),Magicube(3),Magicube(3)]
+for i in range(64):
+    listc = breed(listc,disintegrate)
+for cube in listc:
+    print(fitness(cube))
