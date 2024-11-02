@@ -1,14 +1,13 @@
-from magicube import Magicube
+from Magicubev2 import Magicube2 as Magicube
 from random import random
 from random import choice
 import traversal as t
-from magicube_adder import fitness
 from typing import Callable
 from math import exp
 from math import log
 from math import e as euler
-from math import sqrt
-
+from math import sin as sin
+from math import pi as pi
 #testing purposes only
 from random import randint
 
@@ -83,8 +82,8 @@ def mutate(cube : Magicube, severity : float) -> None:
 #DONT FORGET TO COPY
 def disintegrate(m1 : Magicube, m2 : Magicube) -> Magicube:
     #semakin bagus cube, semakin tinggi kemungkinan nilainya diambil
-    f1 = fitness(m1)
-    f2 = fitness(m2)
+    f1 = m1.get_fitness()
+    f2 = m2.get_fitness()
     picker = wheel_spinner([f1,f2],True)
     maxpos = m1.size**3
     numberlist : list[int] = []
@@ -97,6 +96,27 @@ def disintegrate(m1 : Magicube, m2 : Magicube) -> Magicube:
     
     return Magicube(m1.size,custom=numberlist)
     pass
+
+###ERROR HERE
+def split(m1: Magicube, m2: Magicube) -> Magicube:
+    pos : int = round(sin(random()*pi) * (m1.size**3))
+    custom : list[int] = []
+    print("zzz",pos)
+    for i in range(pos):
+        x = i % m1.size
+        y = i // (m1.size) % m1.size 
+        z = i // (m1.size**2)
+        print(x,y,z)
+        custom += [m1.get(x,y,z)]
+    for i in range(pos,(m1.size**3-pos-1)):
+        x = i % m1.size
+        y = i // (m1.size**2) % m1.size
+        z = i // (m1.size**2)
+        custom += [m2.get(x,y,z)]
+    
+    return Magicube(m1.size,custom=custom)
+        
+    
 
 def splice(m1 : Magicube, m2 : Magicube) -> Magicube:
     pass
@@ -113,7 +133,7 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
     #define fitness value for pick
     fitness_values : list[float] = []
     for cube in candidates:
-        fitness_values += [fitness(cube)]
+        fitness_values += [cube.get_fitness()]
     wheel : wheel_spinner = wheel_spinner(fitness_values,True)
     
     retval : list[Magicube] = []
@@ -138,12 +158,12 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
         # y = exp(-x*loge(2)/125)-1
         #THIS VERSION : PARENT AFFECTS JUDGEMENT
         # y = (exp(-x*loge(2)/125)-1) * (1+(parentavg/maxint))**(1/2)
-        f = fitness(child)
+        f = child.get_fitness()
         mutation_factor = exp(-f*log(2,euler)/(child.size**3))-1
         mutation_factor = mutation_factor * mutation_factor * mutation_factor * mutation_factor
         
         #PARENT modification
-        parentavg = ((fitness(candidates[c1])+fitness(candidates[c2]))/2)
+        parentavg = ((candidates[c1].get_fitness()+candidates[c2].get_fitness())/2)
         mutation_factor = mutation_factor * pow(1+(parentavg / (child.size**3)),2)
         #mutation only swaps two positions so no need to refix
         mutate(child,mutation_factor)
@@ -154,18 +174,3 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
     pass
 
 #testing artifacts
-'''
-n = 5
-cube_a = Magicube(n)
-cube_b = Magicube(n)
-
-print("A :",fitness(cube_a))
-# cube_a.print()
-print("B :",fitness(cube_b))
-# cube_b.print()
-
-test_value : list[float] = []
-for i in range(5):
-    test_value += [fitness(breed([cube_a,cube_b],disintegrate, 1)[0])]
-print(sum(test_value)/len(test_value))
-'''

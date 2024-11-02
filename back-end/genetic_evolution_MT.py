@@ -9,6 +9,8 @@ from math import log
 from math import e as euler
 from math import sqrt
 
+import threading
+
 #testing purposes only
 from random import randint
 
@@ -101,9 +103,14 @@ def disintegrate(m1 : Magicube, m2 : Magicube) -> Magicube:
 def splice(m1 : Magicube, m2 : Magicube) -> Magicube:
     pass
 
+##CONSTANTS
+mutation_constant = log(2,euler)/(125)
+
 #mutation isnt necesarilly needed seeing how fix_cube has some kind of randomness
 #though when the scenario of two same cubes get picked, it is necesarry
-def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicube],Magicube], max_itter : int = None) -> list[Magicube]: #😭😭😭😭😭😭
+def breedMT(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicube],Magicube],returnlist : list, job_id : int, max_itter : int = None) -> None: #😭😭😭😭😭😭
+    global mutation_constant
+    assert(candidates[0].size == 5)
     #init variables
     if (max_itter != None):
         pass
@@ -121,36 +128,36 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
     #candidate numbers :
     c1 = wheel.spin()
     c2 = wheel.spin()
-    for i in range(max_itter):
-        if (c1 != c2): #skip splicing if its the same
-            child = splice_method(candidates[c1],candidates[c2])
-        else:
-            child = candidates[c1].copy()
-        fix_cube(child)
 
-        #SEMAKIN JELEK NILAI CUBE, SEMAKIN TINGGI TINGKAT MUTASI
-        #FOR THE TIME BEING IM NOT IMPLEMENTING THE COMPLEX MUTATION DECISIONS
-        
-        #correction : The better the cube is compared to its parrent, the less mutation it will recieve
-        #factors : distance from 0, distance from parent
-        
-        #THIS VERSION : PURELY BY DISTANCE FROM 0
-        # y = exp(-x*loge(2)/125)-1
-        #THIS VERSION : PARENT AFFECTS JUDGEMENT
-        # y = (exp(-x*loge(2)/125)-1) * (1+(parentavg/maxint))**(1/2)
-        f = fitness(child)
-        mutation_factor = exp(-f*log(2,euler)/(child.size**3))-1
-        mutation_factor = mutation_factor * mutation_factor * mutation_factor * mutation_factor
-        
-        #PARENT modification
-        parentavg = ((fitness(candidates[c1])+fitness(candidates[c2]))/2)
-        mutation_factor = mutation_factor * pow(1+(parentavg / (child.size**3)),2)
-        #mutation only swaps two positions so no need to refix
-        mutate(child,mutation_factor)
-        
-        retval += [child]
+    if (c1 != c2): #skip splicing if its the same
+        child = splice_method(candidates[c1],candidates[c2])
+    else:
+        child = candidates[c1].copy()
+    fix_cube(child)
+
+    #SEMAKIN JELEK NILAI CUBE, SEMAKIN TINGGI TINGKAT MUTASI
+    #FOR THE TIME BEING IM NOT IMPLEMENTING THE COMPLEX MUTATION DECISIONS
+    
+    #correction : The better the cube is compared to its parrent, the less mutation it will recieve
+    #factors : distance from 0, distance from parent
+    
+    #THIS VERSION : PURELY BY DISTANCE FROM 0
+    # y = exp(-x*loge(2)/125)-1
+    #THIS VERSION : PARENT AFFECTS JUDGEMENT
+    # y = (exp(-x*loge(2)/125)-1) * (1+(parentavg/maxint))**(1/2)
+    f = fitness(child)
+    mutation_factor = exp(-f*mutation_constant)-1
+    mutation_factor = mutation_factor * mutation_factor
+    
+    #PARENT modification
+    parentavg = ((fitness(candidates[c1])+fitness(candidates[c2]))/2)
+    mutation_factor = mutation_factor * pow(1+(parentavg / (child.size**3)),2)
+    #mutation only swaps two positions so no need to refix
+    mutate(child,mutation_factor)
+
+    returnlist[job_id] = child
     #start breeding lmao
-    return retval
+    return
     pass
 
 #testing artifacts
@@ -169,3 +176,23 @@ for i in range(5):
     test_value += [fitness(breed([cube_a,cube_b],disintegrate, 1)[0])]
 print(sum(test_value)/len(test_value))
 '''
+
+def do_MT_breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicube],Magicube]) -> list[Magicube]:
+    retval : list[Magicube] = [None,None,None,None]
+    thread1 = threading.Thread(target=breedMT,args=(candidates,disintegrate,retval,0))
+    thread2 = threading.Thread(target=breedMT,args=(candidates,disintegrate,retval,1))
+    thread3 = threading.Thread(target=breedMT,args=(candidates,disintegrate,retval,2))
+    thread4 = threading.Thread(target=breedMT,args=(candidates,disintegrate,retval,3))
+    
+    thread1.start()
+    thread2.start()
+    thread3.start()
+    thread4.start()
+    
+    thread1.join()
+    thread2.join()
+    thread3.join()
+    thread4.join()
+    
+    return retval
+    
