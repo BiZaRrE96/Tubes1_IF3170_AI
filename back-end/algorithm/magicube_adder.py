@@ -1,7 +1,7 @@
 from statistics import stdev
 import time
-import magicube as m
-import traversal as t
+from . import magicube as m
+from . import traversal as t
 import threading
 
 def fitness(cube: m.Magicube) -> float:

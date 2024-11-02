@@ -1,5 +1,5 @@
-import magicube_adder as ma
-import magicube as m
+from . import magicube_adder as ma
+from . import magicube as m
 import traversal as t
 
 n: int = 5
