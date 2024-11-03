@@ -10,17 +10,27 @@ import {
 } from "@/components/ui/resizable"
 import Title from './components/Title';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const { toast } = useToast()
+  const [algorithm, setAlgorithm] = useState("")
   const [cubeResult, setCubeResult] = useState();
   const [loading, setLoading] = useState(false);
   const [isAlgorithmLoading, setIsAlgorithmLoading] = useState(false)
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
   const [executionTime, setExecutionTime] = useState(0.00)
+  // Hill-Climbing with Sideways Move
+  const [maxSidewayMoves, setMaxSidewayMoves] = useState(0)
+  // Random Start Hill-Climbing
+  const [maxRestart, setMaxRestart] = useState(0)
+  // Genetic Algorithm
+  const [populasi, setPopulasi] = useState(0)
+  const [iterasi, setIterasi] = useState(0)
 
   const generateCube = async () => {
     setLoading(true)
+    setAlgorithm("")
     try {
       const n = 125;
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
@@ -32,6 +42,9 @@ export default function Home() {
       })
     } catch (error) {
       console.error("Failed to fetch:", error)
+      toast({
+        title: "Failed to Generate Cube"
+      })
     } finally {
       setLoading(false)
     }
@@ -44,11 +57,19 @@ export default function Home() {
       description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
     })
     try {
-      
+      const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
+      const response = await fetch(`/api/${endpoint}`)
+      const data = await response.json()
+      // Set cube result
+      // Set exectuion time
+      // success toast 
     } catch (error) {
-      
+      console.error("Failed to fetch:", error)
+      toast({
+        title: "Failed to Generate Cube"
+      })
     } finally {
-      // setIsAlgorithmLoading(false)
+      setIsAlgorithmLoading(false)
     }
   }
 
@@ -94,32 +115,56 @@ export default function Home() {
                 <Button 
                   disabled={!cubeResult || isAlgorithmLoading} 
                   variant={"outline"} 
-                  className='bg-white/10 text-white' 
-                  onClick={() => generateCubeByAlgorithm("Steepest Ascent Hill-Climbing")}
+                  className={cn(
+                    'bg-white/10 text-white',
+                    algorithm === "Steepest Ascent-Hill-Climbing" && "bg-white/50"
+                  )} 
+                  onClick={() => {
+                    setAlgorithm("Steepest Ascent-Hill-Climbing")
+                    generateCubeByAlgorithm("Steepest Ascent-Hill-Climbing")
+                  }}
                 >
                   Steepest Ascent Hill-Climbing
                 </Button>
                 <Button 
                   disabled={!cubeResult || isAlgorithmLoading} 
                   variant={"outline"} 
-                  className='bg-white/10 text-white' 
-                  onClick={() => generateCubeByAlgorithm("Stochastic Hill-Climbing")}
+                  className={cn(
+                    'bg-white/10 text-white',
+                    algorithm === "Stochastic Hill-Climbing" && "bg-white/50"
+                  )} 
+                  onClick={() => {
+                    setAlgorithm("Stochastic Hill-Climbing")
+                    generateCubeByAlgorithm("Stochastic Hill-Climbing")
+                  }}
                 >
                   Stochastic Hill-Climbing
                 </Button>
                 <Button  
                   disabled={!cubeResult || isAlgorithmLoading} 
                   variant={"outline"} 
-                  className='bg-white/10 text-white' 
-                  onClick={() => generateCubeByAlgorithm("Hill-Climbing With Sideways Move")}
+                  className={cn(
+                    'bg-white/10 text-white',
+                    algorithm === "Hill-Climbing With Sideways Move" && "bg-white/50"
+                  )} 
+                  onClick={() => { 
+                    setAlgorithm("Hill-Climbing With Sideways Move")  
+                    // generateCubeByAlgorithm("Hill-Climbing With Sideways Move") 
+                  }}
                 >
                   Hill-Climbing With Sideways Move
                 </Button>
                 <Button 
                   disabled={!cubeResult || isAlgorithmLoading} 
                   variant={"outline"} 
-                  className='bg-white/10 text-white' 
-                  onClick={() => generateCubeByAlgorithm("Random Restart Hill-Climbing")}
+                  className={cn(
+                    'bg-white/10 text-white',
+                    algorithm === "Random Start Hill-Climbing" && "bg-white/50"
+                  )} 
+                  onClick={() => { 
+                    setAlgorithm("Random Start Hill-Climbing")
+                    // generateCubeByAlgorithm("Random Restart Hill-Climbing") 
+                  }}
                 >
                   Random Restart Hill-Climbing
                 </Button>
@@ -131,21 +176,54 @@ export default function Home() {
                 <Button 
                   disabled={!cubeResult || isAlgorithmLoading} 
                   variant={"outline"} 
-                  className='bg-white/10 text-white'
-                  onClick={() => generateCubeByAlgorithm("Simulated Annealing")}
+                  className={cn(
+                    'bg-white/10 text-white',
+                    algorithm === "Simulated-Annealing" && "bg-white/50"
+                  )} 
+                  onClick={() => { 
+                    setAlgorithm("Simulated-Annealing")
+                    generateCubeByAlgorithm("Simulated-Annealing")
+                  }}
                 >
                   Simulated Annealing
                 </Button>
                 <Button 
                   disabled={!cubeResult || isAlgorithmLoading} 
                   variant={"outline"} 
-                  className='bg-white/10 text-white' 
-                  onClick={() => generateCubeByAlgorithm("Genetic Algorithm")}
+                  className={cn(
+                    'bg-white/10 text-white',
+                    algorithm === "Genetic Algorithm" && "bg-white/50"
+                  )} 
+                  onClick={() => { 
+                    setAlgorithm("Genetic Algorithm")
+                    // generateCubeByAlgorithm("Genetic-Algorithm")
+                  }}
                 >
                   Genetic Algorithm
                 </Button>
               </div>
             </div>
+            {
+              algorithm && (
+                <div>
+                  { algorithm === "Hill-Climbing With Sideways Move" && (
+                    <div>
+                    
+                    </div>
+                  )}
+                  { algorithm === "Random Start Hill-Climbing" && (
+                    <div>
+                    
+                    </div>
+                  )}
+                  { algorithm === "Genetic Algorithm" && (
+                    <div>
+                    
+                    </div>
+                  )}
+                </div>
+              )
+            }
           </div>
           {/* Result Box */}
           <div className='w-full border-t-2 border-white/25 mt-4 py-4 flex flex-col items-start'>
