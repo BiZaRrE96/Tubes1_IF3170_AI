@@ -55,9 +55,9 @@ export default function Home() {
 
       {/* Algorithm */}
       <ResizablePanelGroup direction={direction} className='flex flex-row items-start justify-between w-full gap-x-8'>
-        {/* Choose Algoritma */}
-        <ResizablePanel defaultSize={40} className='text-white flex flex-col items-start'>
+        <ResizablePanel defaultSize={40} className='text-white flex flex-col items-start h-[550px] overflow-y-scroll'>
           <h3 className='text-2xl font-bold'>Choose The Algorithm 🚀</h3>
+          {/* Choose Algoritma */}
           <div className='py-4 flex items-center gap-x-4 gap-y-4 flex-wrap z-20'>
             <Button 
               variant={"outline"} 
@@ -70,16 +70,16 @@ export default function Home() {
             <div className='space-y-2'>
               <p>Hill Climbing</p>
               <div className='flex gap-4 flex-wrap'>
-                <Button variant={"outline"} className='bg-white/10 text-white'>
+                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Steepest Ascent Hill-Climbing")}>
                   Steepest Ascent Hill-Climbing
                 </Button>
-                <Button variant={"outline"} className='bg-white/10 text-white'>
-                  Stochastic Hil Climbing
+                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Stochastic Hill-Climbing")}>
+                  Stochastic Hill-Climbing
                 </Button>
-                <Button variant={"outline"} className='bg-white/10 text-white'>
+                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Hill-Climbing With Sideways Move")}>
                   Hill-Climbing With Sideways Move
                 </Button>
-                <Button variant={"outline"} className='bg-white/10 text-white'>
+                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Random Restart Hill-Climbing")}>
                   Random Restart Hill-Climbing
                 </Button>
               </div>
@@ -87,10 +87,10 @@ export default function Home() {
             <div className='space-y-2'>
               <p>Other Algorithm</p>
               <div className='flex gap-x-4 gap-y-2 flex-wrap'>
-                <Button variant={"outline"} className='bg-white/10 text-white'>
+                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Simulated Annealing")}>
                   Simulated Annealing
                 </Button>
-                <Button variant={"outline"} className='bg-white/10 text-white'>
+                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Genetic Algorithm")}>
                   Genetic Algorithm
                 </Button>
               </div>
