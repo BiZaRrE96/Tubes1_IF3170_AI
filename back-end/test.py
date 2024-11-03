@@ -14,12 +14,27 @@ def max_list(l : list[float]):
     return mpos
 
 
-cubes : list[Magicube] = [Magicube(5) for i in range(4)]
+cubes : list[Magicube] = [Magicube(5) for i in range(8)]
+
+avg = 0
+avg_count = 0
 for cube in cubes:
     print(cube.get_fitness())
+    avg += cube.get_fitness()
+    avg_count += 1
+print("AVERAGE :",avg/avg_count)
+
+for i in range(128):
+    cubes = ge2.breed(cubes,ge2.disintegrate)
+    # print("=====")
+    # for cube in cubes:
+    #     print(cube.get_fitness())
+
 print("=====")
-for i in range(1024):
-    cubes = ge2.breed(cubes,ge2.split)
-    
+avg = 0
+avg_count = 0
 for cube in cubes:
     print(cube.get_fitness())
+    avg += cube.get_fitness()
+    avg_count += 1
+print("AVERAGE :",avg/avg_count)

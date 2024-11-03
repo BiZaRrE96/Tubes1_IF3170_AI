@@ -15,17 +15,22 @@ from hilltest import generate_vector
 
 class wheel_spinner:
     def __init__(self, value_list: list[float], flip : bool = False) -> None:
+        self.floor_values : list[float] = []
         self.total_value = sum(value_list,0)
-        modifier = 0
-        if flip:
-            self.total_value *= (-1)
-            modifier = self.total_value
-        self.floor_values : list[float] = [(sum([value_list[i] + modifier for i in range(j)]) + value_list[j] + modifier) for j in range(len(value_list))]
-
+        
+        if (flip):    
+            value_list = [value - self.total_value for value in value_list]
+            self.total_value = sum(value_list,0)
+        
+        chances = []
+        for j in range(len(value_list)):
+            chances += [value_list[j] / self.total_value]
+            self.floor_values += [(sum([value_list[i] for i in range(j)]) + value_list[j])/self.total_value]
+    
         pass
     
     def spin(self) -> int:
-        target : float = random() * self.total_value
+        target : float = random()
         i = 0
         #print("TARGET :",target)
         while (target >= self.floor_values[i]):
@@ -90,10 +95,15 @@ def disintegrate(m1 : Magicube, m2 : Magicube) -> Magicube:
     
     #begin splicing
     pick = [m1,m2]
+    ###pickrate = [0,0]
     for i in range(maxpos):
         pos : t.Vector3 = generate_vector(i,m1.size)
-        numberlist += [pick[picker.spin()].get(pos.x,pos.y,pos.z)]
+        pickno = picker.spin()
+        numberlist += [pick[pickno].get(pos.x,pos.y,pos.z)]
+        ###pickrate[pickno] += 1
     
+    ###print(f1,f2)
+    ###print("PICKRATE :",pickrate)
     return Magicube(m1.size,custom=numberlist)
     pass
 
@@ -139,35 +149,32 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
     retval : list[Magicube] = []
     #splice until have same ammount as supplied candidates or speciffied times
     #candidate numbers :
-    c1 = wheel.spin()
-    c2 = wheel.spin()
     for i in range(max_itter):
+        c1 = wheel.spin()
+        c2 = wheel.spin()
+        #print("SPEEN :",c1,c2)
         if (c1 != c2): #skip splicing if its the same
             child = splice_method(candidates[c1],candidates[c2])
         else:
             child = candidates[c1].copy()
         fix_cube(child)
 
-        #SEMAKIN JELEK NILAI CUBE, SEMAKIN TINGGI TINGKAT MUTASI
-        #FOR THE TIME BEING IM NOT IMPLEMENTING THE COMPLEX MUTATION DECISIONS
-        
-        #correction : The better the cube is compared to its parrent, the less mutation it will recieve
-        #factors : distance from 0, distance from parent
-        
-        #THIS VERSION : PURELY BY DISTANCE FROM 0
-        # y = exp(-x*loge(2)/125)-1
-        #THIS VERSION : PARENT AFFECTS JUDGEMENT
-        # y = (exp(-x*loge(2)/125)-1) * (1+(parentavg/maxint))**(1/2)
+        csize = candidates[c1].size
+        mv = -(csize ** 3)
+        p = (candidates[c1].get_fitness() + candidates[c2].get_fitness())/2
         f = child.get_fitness()
-        mutation_factor = exp(-f*log(2,euler)/(child.size**3))-1
-        mutation_factor = mutation_factor * mutation_factor * mutation_factor * mutation_factor
-        
         #PARENT modification
-        parentavg = ((candidates[c1].get_fitness()+candidates[c2].get_fitness())/2)
-        mutation_factor = mutation_factor * pow(1+(parentavg / (child.size**3)),2)
+        
+        #NO MUTATION IF CHILD IS BETTER
+                    
+                    # if (f>p): #if child is better, lessen mutation
+                    #     mutation_factor = 0
+                    # else:
+                    #     mutation_factor = ((-f + p) * 0.5 * euler / (csize**3)) + 0.25
+        mutation_factor = 0
+                         
         #mutation only swaps two positions so no need to refix
         mutate(child,mutation_factor)
-        
         retval += [child]
     #start breeding lmao
     return retval
