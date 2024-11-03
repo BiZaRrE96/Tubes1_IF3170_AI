@@ -38,7 +38,7 @@ const MagicCube = () => {
   const randomNumbers = generateRandomNumbers(size);
 
   return (
-    <div className="w-[500px] h-[500px] border-2 border-black rounded-xl">
+    <div className="w-full h-full border-2 border-black rounded-xl">
       <Canvas camera={{ position: [0, 0, 10] }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
