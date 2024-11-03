@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-space py-8`}
+        className={`poppins-regular antialiased bg-space py-8`}
       >
         <StarsCanvas />
         {children}

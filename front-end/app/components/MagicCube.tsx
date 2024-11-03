@@ -1,32 +1,48 @@
 'use client'
+
 import React, { useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import robotoFontUrl from 'three/examples/fonts/helvetiker_regular.typeface.json';
+import poppinsFontUrl from '@/app/fonts/Poppins_Regular.json'
 
 const generateRandomNumbers = (size: number) => {
   return Array.from({ length: size * size * size }, () => Math.floor(Math.random() * 100));
 };
 
 const Cube = ({ position, number }: { position: [number, number, number]; number: number }) => {
-  const font = useMemo(() => new FontLoader().parse(robotoFontUrl), []);
+  const font = useMemo(() => new FontLoader().parse(poppinsFontUrl), []);
+
   const textGeometry = useMemo(() => {
     const geometry = new TextGeometry(`${number}`, {
       font,
       size: 0.3,
       height: 0.05,
     });
-    geometry.center(); // Centers the text within the geometry
+    geometry.center();
+
+    const colors = [];
+    const color1 = new THREE.Color(0x0000FF); 
+    const color2 = new THREE.Color(0x8E54E9); 
+
+    for (let i = 0; i < geometry.attributes.position.count; i++) {
+      const y = geometry.attributes.position.getY(i);
+      const color = color1.clone().lerp(color2, (y + 0.5) / 1.0);
+      colors.push(color.r, color.g, color.b);
+    }
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     return geometry;
   }, [font, number]);
 
   return (
     <group position={position}>
       <mesh geometry={textGeometry}>
-        <meshStandardMaterial color="white" /> {/* Mengatur warna teks menjadi hitam */}
+        <meshStandardMaterial 
+          vertexColors={true} 
+          emissive={new THREE.Color(0xffffff)} emissiveIntensity={0.5}
+        /> 
       </mesh>
     </group>
   );

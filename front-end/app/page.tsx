@@ -16,13 +16,13 @@ export default function Home() {
     <main className="w-full wrapper space-y-4 flex flex-col items-center transition-all">
       {/* Title */}
       <div className='w-full flex items-center justify-between text-white font-medium mb-4'>
-        <h1>🧑🏻‍🚀 Search for Diagonal Magic Cube Solutions with Local Search</h1>
+        <h1>🧑🏻‍🚀 <span className='text-transparent bg-gradient-to-r from-[#DA22FF] to-[#9733EE] text-xl font-bold bg-clip-text'>Search for Diagonal Magic Cube Solutions with Local Search</span></h1>
         <p>Tugas Besar 1 IF3070</p>
       </div>
       {/* Algorithm */}
       <ResizablePanelGroup direction='horizontal' className='flex items-start justify-between w-full gap-x-8'>
         {/* Choose Algoritma */}
-        <ResizablePanel defaultSize={25} className='text-white flex flex-col items-start'>
+        <ResizablePanel defaultSize={40} className='text-white flex flex-col items-start'>
           <h3 className='text-2xl font-bold'>Choose The Algorithm 🚀</h3>
           <div className='py-4 flex items-center gap-x-4 gap-y-4 flex-wrap z-20'>
             <div className='space-y-2'>
@@ -61,7 +61,7 @@ export default function Home() {
         </ResizablePanel>
         <ResizableHandle className='z-20 w-[1px] bg-white h-[550px]' withHandle />
         {/* Magic Cube Display */}
-        <ResizablePanel defaultSize={75} className='border-2 border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
+        <ResizablePanel defaultSize={60} className='border-2 border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
           <MagicCube />
         </ResizablePanel>
       </ResizablePanelGroup>
