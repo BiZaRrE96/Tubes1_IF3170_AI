@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MagicCube from './components/MagicCube';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,7 +13,7 @@ import Title from './components/Title';
 export default function Home() {
   const [executionTime, setExecutionTime] = useState(0.00)
   const [algorithm, setAlgorithm] = useState("")
-  const [cubeResult, setCubeResult] = useState([]);
+  const [cubeResult, setCubeResult] = useState<number[]>();
   const [loading, setLoading] = useState(false);
 
   const generateCube = async () => {
@@ -22,8 +22,7 @@ export default function Home() {
       const n = 125;
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
       const data = await response.json()
-      setCubeResult(data.numbers)  
-      console.log(cubeResult)
+      setCubeResult(data)  
     } catch (error) {
       console.error("Failed to fetch:", error)
     } finally {

@@ -1,5 +1,5 @@
 import random
-import exceptions as ex
+from . import exceptions as ex
 import copy
 
 # Generate a list of numbers from 1 to n, and randomized into a list
