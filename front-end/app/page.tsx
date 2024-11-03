@@ -12,6 +12,24 @@ import Title from './components/Title';
 
 export default function Home() {
   const [executionTime, setExecutionTime] = useState(0.00)
+  const [algorithm, setAlgorithm] = useState("")
+  const [cubeResult, setCubeResult] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const generateCube = async () => {
+    setLoading(true)
+    try {
+      const n = 125;
+      const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
+      const data = await response.json()
+      setCubeResult(data.numbers)  
+      console.log(cubeResult)
+    } catch (error) {
+      console.error("Failed to fetch:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <main className="w-full wrapper space-y-4 flex flex-col items-center transition-all">
@@ -24,9 +42,17 @@ export default function Home() {
         <ResizablePanel defaultSize={40} className='text-white flex flex-col items-start'>
           <h3 className='text-2xl font-bold'>Choose The Algorithm 🚀</h3>
           <div className='py-4 flex items-center gap-x-4 gap-y-4 flex-wrap z-20'>
+            <Button 
+              variant={"outline"} 
+              className='bg-white/10 text-white py-4'
+              onClick={generateCube}
+              disabled={loading}
+            >
+              {loading ? "Generating Cube..." : "Generate Cube"}
+            </Button>
             <div className='space-y-2'>
               <p>Hill Climbing</p>
-              <div className='flex gap-x-4 gap-y-2 flex-wrap'>
+              <div className='flex gap-4 flex-wrap'>
                 <Button variant={"outline"} className='bg-white/10 text-white'>
                   Steepest Ascent Hill-Climbing
                 </Button>
