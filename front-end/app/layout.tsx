@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import StarsCanvas from "./components/StarBackground";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,9 +42,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full flex flex-col items-center justify-start`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-space py-8`}
       >
-        <Navbar />
+        <StarsCanvas />
         {children}
       </body>
     </html>

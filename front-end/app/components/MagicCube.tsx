@@ -26,7 +26,7 @@ const Cube = ({ position, number }: { position: [number, number, number]; number
   return (
     <group position={position}>
       <mesh geometry={textGeometry}>
-        <meshStandardMaterial color="black" /> {/* Mengatur warna teks menjadi hitam */}
+        <meshStandardMaterial color="white" /> {/* Mengatur warna teks menjadi hitam */}
       </mesh>
     </group>
   );
