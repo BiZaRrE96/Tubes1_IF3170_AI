@@ -2,6 +2,7 @@ import magicube_adder as ma
 import magicube as m
 import traversal as t
 import random
+import time
 
 n: int = 5
 
@@ -30,6 +31,7 @@ best_cube_overall = cube.copy()
 restart_count = 0 
 total_iterations = 0  
 
+start_time = time.time()
 try:
     for restart in range(MAX_RESTARTS):
         restart_count += 1
@@ -83,10 +85,14 @@ try:
         if found_optimal:
             break
 
+    end_time = time.time()
+    execution_time = end_time - start_time
+
     print("Final cube configuration with best fitness across all restarts:")
     best_cube_overall.print()
     print(f"Total restarts: {restart_count}")
     print(f"Total iterations: {total_iterations}")
+    print(f"Execution time: {execution_time:.2f} seconds") 
 
 except Exception as e:
     print("An error occurred:", e)

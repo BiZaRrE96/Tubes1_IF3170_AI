@@ -2,6 +2,7 @@ import magicube_adder as ma
 import magicube as m
 import traversal as t
 import random
+import time
 
 n: int = 5
 
@@ -13,6 +14,7 @@ cube: m.Magicube = m.Magicube(n)
 def generate_vector(n: int, size: int) -> t.Vector3:
     return t.Vector3([n % size, n // (size) % size, n // (size**2)])
 
+start_time = time.time()
 try:
     for i in range(MAX_ITERATION):
         current_fitness = ma.fitness(cube)
@@ -54,6 +56,8 @@ try:
 
     print("Final cube configuration:")
     cube.print()
+    end_time = time.time()
+    execution_time = end_time - start_time
 
 except Exception as e:
     print("An error occurred:", e)
