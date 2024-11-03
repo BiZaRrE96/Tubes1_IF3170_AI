@@ -5,16 +5,15 @@ import traversal as t
 n: int = 5
 
 # Menerima input dari pengguna untuk jumlah maksimum iterasi
-x = int(input("Enter the maximum iteration: "))
-MAX_ITERATION: int = x
 
+MAX_ITERATION: int = 100000
 cube: m.Magicube = m.Magicube(n)
 
 def generate_vector(n: int, size: int) -> t.Vector3:
     return t.Vector3([n % size, n // (size) % size, n // (size**2)])
 
 try:
-    sideways_moves_limit = 5  #Parameter maximum sideways moves
+    sideways_moves_limit = int(input("Masukkan parameter maksimum sideways move : "))  #Parameter maximum sideways moves
     sideways_moves = 0 
     current_fitness = ma.fitness(cube)
 
@@ -43,7 +42,7 @@ try:
                 neighbor_fitness = ma.fitness(cube)
                 
                 # Jika konfigurasi baru lebih baik, simpan
-                if neighbor_fitness > best_fitness:
+                if neighbor_fitness >= best_fitness:
                     best_fitness = neighbor_fitness
                     found_better = True
                     best_cube = cube.copy()

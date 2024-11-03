@@ -3,10 +3,7 @@ import magicube as m
 import traversal as t
 
 n: int = 5
-
-# Menerima input dari pengguna untuk jumlah maksimum iterasi
-x = int(input("Enter the maximum iteration: "))
-MAX_ITERATION: int = x
+MAX_ITERATION: int = 10000  # Set a high default to allow for extensive searching
 
 cube: m.Magicube = m.Magicube(n)
 
@@ -19,7 +16,7 @@ try:
         
         print(f"Iteration {i + 1} - Starting fitness: {current_fitness}")
         
-        # Memeriksa apakah kubus saat ini sudah optimal
+        # Break if optimal solution is found (based on a positive fitness threshold, if applicable)
         if current_fitness >= 0.0:
             print("Optimal solution found.")
             break
@@ -33,34 +30,31 @@ try:
 
             for k in range(j + 1, n**3):
                 target = generate_vector(k, n)
-                
-                # Menukar posisi dengan yang nilai fitness lebih baik
+
+                # Swap spots and evaluate fitness
                 cube.swap_spot(start.x, start.y, start.z, target.x, target.y, target.z)
-                
-                # Menghitung fitness setelah swap
                 new_fitness = ma.fitness(cube)
-                
-                # Jika konfigurasi baru lebih baik, simpan
+
                 if new_fitness > best_fitness:
                     best_fitness = new_fitness
                     found_better = True
                     best_cube = cube.copy()
-                    print(f"NEW: {best_fitness} >> Current fitness after swap: {ma.fitness(cube)}")
+                    print(f"NEW: {best_fitness} >> Current fitness after swap: {new_fitness}")
                 
-                # Kembalikan swap
+                # Swap back to original configuration
                 cube.swap_spot(start.x, start.y, start.z, target.x, target.y, target.z)
         
-        # Memperbarui kubus jika ditemukan konfigurasi yang lebih baik
+        # If a better solution was found, update the cube
         if found_better:
             cube = best_cube
             print(f"End of iteration {i + 1} - New best fitness: {best_fitness}")
         else:
+            # Stop the loop if no better solution is found (local optimum reached)
             print(f"End of iteration {i + 1} - No better solution found, stopping.")
-            break  # Berhenti jika tidak ada solusi yang lebih baik
+            break 
 
         print(f"Current fitness after iteration {i + 1}: {ma.fitness(cube)}\n")
 
-    # Mencetak konfigurasi akhir kubus setelah iterasi terakhir
     print("Final cube configuration:")
     cube.print()
 
