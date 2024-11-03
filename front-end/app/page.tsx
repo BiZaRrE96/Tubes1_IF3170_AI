@@ -15,6 +15,7 @@ export default function Home() {
   const [algorithm, setAlgorithm] = useState("")
   const [cubeResult, setCubeResult] = useState<number[]>();
   const [loading, setLoading] = useState(false);
+  const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
 
   const generateCube = async () => {
     setLoading(true)
@@ -30,13 +31,30 @@ export default function Home() {
     }
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setDirection('vertical');
+      } else {
+        setDirection('horizontal');
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <main className="w-full wrapper space-y-4 flex flex-col items-center transition-all">
       {/* Title */}
       <Title />
 
       {/* Algorithm */}
-      <ResizablePanelGroup direction='horizontal' className='flex items-start justify-between w-full gap-x-8'>
+      <ResizablePanelGroup direction={direction} className='flex flex-row items-start justify-between w-full gap-x-8'>
         {/* Choose Algoritma */}
         <ResizablePanel defaultSize={40} className='text-white flex flex-col items-start'>
           <h3 className='text-2xl font-bold'>Choose The Algorithm 🚀</h3>
@@ -83,10 +101,10 @@ export default function Home() {
             <p>Time Execition : {executionTime}</p>
           </div>
         </ResizablePanel>
-        <ResizableHandle className='z-20 w-[1px] bg-white h-[550px]' withHandle />
+        <ResizableHandle className='z-20 w-[1px] bg-white h-[550px] hidden md:block' withHandle />
         
         {/* Magic Cube Display */}
-        <ResizablePanel defaultSize={60} className='border-2 border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
+        <ResizablePanel defaultSize={60} className='hidden md:block border-2 border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
           <MagicCube />
         </ResizablePanel>
       </ResizablePanelGroup>
