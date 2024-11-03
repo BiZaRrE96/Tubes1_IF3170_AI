@@ -7,7 +7,7 @@ n: int = 5
 
 # Menerima input dari pengguna untuk jumlah maksimum iterasi
 
-MAX_ITERATION: int = 100000
+MAX_ITERATION: int = 10
 cube: m.Magicube = m.Magicube(n)
 
 def generate_vector(n: int, size: int) -> t.Vector3:
@@ -73,6 +73,7 @@ try:
 
     end_time = time.time()
     execution_time = end_time - start_time
+    print(f"Execution time: {execution_time:.2f} seconds")
 
 except Exception as e:
     print("An error occurred:", e)

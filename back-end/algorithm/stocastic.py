@@ -58,6 +58,7 @@ try:
     cube.print()
     end_time = time.time()
     execution_time = end_time - start_time
+    print(f"Execution time: {execution_time:.2f} seconds")
 
 except Exception as e:
     print("An error occurred:", e)
