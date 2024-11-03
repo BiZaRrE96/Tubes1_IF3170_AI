@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useMemo } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useMemo, useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
@@ -14,6 +14,14 @@ const generateRandomNumbers = (size: number) => {
 
 const Cube = ({ position, number }: { position: [number, number, number]; number: number }) => {
   const font = useMemo(() => new FontLoader().parse(poppinsFontUrl), []);
+  const textMeshRef = useRef<THREE.Mesh>(null!);
+  const { camera } = useThree();
+
+  useFrame(() => {
+    if (textMeshRef.current) {
+      textMeshRef.current.quaternion.copy(camera.quaternion);
+    }
+  });
 
   const textGeometry = useMemo(() => {
     const geometry = new TextGeometry(`${number}`, {
@@ -38,7 +46,7 @@ const Cube = ({ position, number }: { position: [number, number, number]; number
 
   return (
     <group position={position}>
-      <mesh geometry={textGeometry}>
+      <mesh ref={textMeshRef} geometry={textGeometry}>
         <meshStandardMaterial 
           vertexColors={true} 
           emissive={new THREE.Color(0xffffff)} emissiveIntensity={0.5}
