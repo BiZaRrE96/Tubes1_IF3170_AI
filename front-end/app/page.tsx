@@ -13,7 +13,7 @@ import Title from './components/Title';
 export default function Home() {
   const [executionTime, setExecutionTime] = useState(0.00)
   const [algorithm, setAlgorithm] = useState("")
-  const [cubeResult, setCubeResult] = useState<number[]>();
+  const [cubeResult, setCubeResult] = useState();
   const [loading, setLoading] = useState(false);
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
 
@@ -105,7 +105,7 @@ export default function Home() {
         
         {/* Magic Cube Display */}
         <ResizablePanel defaultSize={60} className='hidden md:block border-2 border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
-          <MagicCube />
+          <MagicCube numbers={cubeResult} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </main>

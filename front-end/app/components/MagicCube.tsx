@@ -56,33 +56,42 @@ const Cube = ({ position, number }: { position: [number, number, number]; number
   );
 };
 
-const MagicCube = () => {
+const MagicCube = ({ 
+  numbers 
+}: {
+  numbers: number[] | undefined
+}) => {
   const size = 5;
   const spacing = 1.5;
-  const randomNumbers = generateRandomNumbers(size);
+  const randomNumbers = numbers
 
   return (
-    <div className="w-full h-full border-2 border-black rounded-xl">
-      <Canvas camera={{ position: [0, 0, 10] }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <OrbitControls enableZoom={true} />
-        {Array.from({ length: size }).map((_, x) =>
-          Array.from({ length: size }).map((_, y) =>
-            Array.from({ length: size }).map((_, z) => {
-              const index = x * size * size + y * size + z;
-              const number = randomNumbers[index];
-              return (
-                <Cube
-                  key={`${x}-${y}-${z}`}
-                  position={[x * spacing - (size * spacing) / 2, y * spacing - (size * spacing) / 2, z * spacing - (size * spacing) / 2]}
-                  number={number}
-                />
-              );
-            })
-          )
-        )}
-      </Canvas>
+    <div className="w-full h-full border-2 border-black rounded-xl flex items-center justify-center">
+      {numbers ? (
+        <Canvas camera={{ position: [0, 0, 10] }}>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <OrbitControls enableZoom={true} />
+          {Array.from({ length: size }).map((_, x) =>
+            Array.from({ length: size }).map((_, y) =>
+              Array.from({ length: size }).map((_, z) => {
+                const index = x * size * size + y * size + z;
+                // @ts-ignore
+                const number = randomNumbers[index];
+                return (
+                  <Cube
+                    key={`${x}-${y}-${z}`}
+                    position={[x * spacing - (size * spacing) / 2, y * spacing - (size * spacing) / 2, z * spacing - (size * spacing) / 2]}
+                    number={number}
+                  />
+                );
+              })
+            )
+          )}
+        </Canvas>
+      ) : (
+        <h1 className='text-white font-medium text-xl'>No Cube Generated</h1>
+      )}
     </div>
   )
 }
