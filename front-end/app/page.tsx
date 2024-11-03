@@ -9,13 +9,15 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import Title from './components/Title';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
-  const [executionTime, setExecutionTime] = useState(0.00)
-  const [algorithm, setAlgorithm] = useState("")
+  const { toast } = useToast()
   const [cubeResult, setCubeResult] = useState();
   const [loading, setLoading] = useState(false);
+  const [isAlgorithmLoading, setIsAlgorithmLoading] = useState(false)
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [executionTime, setExecutionTime] = useState(0.00)
 
   const generateCube = async () => {
     setLoading(true)
@@ -24,10 +26,29 @@ export default function Home() {
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
       const data = await response.json()
       setCubeResult(data)  
+      toast({
+        title: "Cube Generated!",
+        description: "Successfully generated 125 random numbers"
+      })
     } catch (error) {
       console.error("Failed to fetch:", error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const generateCubeByAlgorithm = async (algorithm: string) => {
+    setIsAlgorithmLoading(true)
+    toast({
+      title: "Searching...",
+      description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
+    })
+    try {
+      
+    } catch (error) {
+      
+    } finally {
+      // setIsAlgorithmLoading(false)
     }
   }
 
@@ -70,16 +91,36 @@ export default function Home() {
             <div className='space-y-2'>
               <p>Hill Climbing</p>
               <div className='flex gap-4 flex-wrap'>
-                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Steepest Ascent Hill-Climbing")}>
+                <Button 
+                  disabled={!cubeResult || isAlgorithmLoading} 
+                  variant={"outline"} 
+                  className='bg-white/10 text-white' 
+                  onClick={() => generateCubeByAlgorithm("Steepest Ascent Hill-Climbing")}
+                >
                   Steepest Ascent Hill-Climbing
                 </Button>
-                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Stochastic Hill-Climbing")}>
+                <Button 
+                  disabled={!cubeResult || isAlgorithmLoading} 
+                  variant={"outline"} 
+                  className='bg-white/10 text-white' 
+                  onClick={() => generateCubeByAlgorithm("Stochastic Hill-Climbing")}
+                >
                   Stochastic Hill-Climbing
                 </Button>
-                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Hill-Climbing With Sideways Move")}>
+                <Button  
+                  disabled={!cubeResult || isAlgorithmLoading} 
+                  variant={"outline"} 
+                  className='bg-white/10 text-white' 
+                  onClick={() => generateCubeByAlgorithm("Hill-Climbing With Sideways Move")}
+                >
                   Hill-Climbing With Sideways Move
                 </Button>
-                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Random Restart Hill-Climbing")}>
+                <Button 
+                  disabled={!cubeResult || isAlgorithmLoading} 
+                  variant={"outline"} 
+                  className='bg-white/10 text-white' 
+                  onClick={() => generateCubeByAlgorithm("Random Restart Hill-Climbing")}
+                >
                   Random Restart Hill-Climbing
                 </Button>
               </div>
@@ -87,18 +128,29 @@ export default function Home() {
             <div className='space-y-2'>
               <p>Other Algorithm</p>
               <div className='flex gap-x-4 gap-y-2 flex-wrap'>
-                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Simulated Annealing")}>
+                <Button 
+                  disabled={!cubeResult || isAlgorithmLoading} 
+                  variant={"outline"} 
+                  className='bg-white/10 text-white'
+                  onClick={() => generateCubeByAlgorithm("Simulated Annealing")}
+                >
                   Simulated Annealing
                 </Button>
-                <Button disabled={!cubeResult} variant={"outline"} className='bg-white/10 text-white' onClick={() => setAlgorithm("Genetic Algorithm")}>
+                <Button 
+                  disabled={!cubeResult || isAlgorithmLoading} 
+                  variant={"outline"} 
+                  className='bg-white/10 text-white' 
+                  onClick={() => generateCubeByAlgorithm("Genetic Algorithm")}
+                >
                   Genetic Algorithm
                 </Button>
               </div>
             </div>
           </div>
           {/* Result Box */}
-          <div className='w-full border-t-2 border-white/25 mt-4 py-4'>
+          <div className='w-full border-t-2 border-white/25 mt-4 py-4 flex flex-col items-start'>
             <p>Time Execition : {executionTime}</p>
+            <p>Objective Function Value : </p>
           </div>
         </ResizablePanel>
         <ResizableHandle className='z-20 w-[1px] bg-white h-[550px] hidden md:block' withHandle />
