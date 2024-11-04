@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import MagicCube from './components/MagicCube';
-import { Button } from '@/components/ui/button';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -14,6 +13,17 @@ import { cn } from '@/lib/utils';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { geneticAlgorithm, geneticAlgorithmType, maxRestarts, maxRestartType, maxSidewaysMove, maxSidewaysMoveType } from '@/lib/schemas';
+import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
 export default function Home() {
   const { toast } = useToast()
@@ -97,7 +107,7 @@ export default function Home() {
         title: "Failed to Generate Cube"
       })
     } finally {
-      setIsAlgorithmLoading(false)
+      // setIsAlgorithmLoading(false)
     }
   }
 
@@ -149,7 +159,7 @@ export default function Home() {
                   )} 
                   onClick={() => {
                     setAlgorithm("Steepest Ascent-Hill-Climbing")
-                    generateCubeByAlgorithm("Steepest Ascent-Hill-Climbing")
+                    // generateCubeByAlgorithm("Steepest Ascent-Hill-Climbing")
                   }}
                 >
                   Steepest Ascent Hill-Climbing
@@ -163,7 +173,7 @@ export default function Home() {
                   )} 
                   onClick={() => {
                     setAlgorithm("Stochastic Hill-Climbing")
-                    generateCubeByAlgorithm("Stochastic Hill-Climbing")
+                    // generateCubeByAlgorithm("Stochastic Hill-Climbing")
                   }}
                 >
                   Stochastic Hill-Climbing
@@ -210,7 +220,7 @@ export default function Home() {
                   )} 
                   onClick={() => { 
                     setAlgorithm("Simulated-Annealing")
-                    generateCubeByAlgorithm("Simulated-Annealing")
+                    // generateCubeByAlgorithm("Simulated-Annealing")
                   }}
                 >
                   Simulated Annealing
@@ -233,21 +243,72 @@ export default function Home() {
             </div>
             {
               algorithm && (
-                <div className='text-white'>
+                <div className='text-white mt-2'>
                   { algorithm === "Hill-Climbing With Sideways Move" && (
-                    <div>
-                      HC Side ways
-                    </div>
+                    <Form {...sidewaysForm}>
+                      <form>
+                        <FormField 
+                          control={sidewaysForm.control}
+                          name="maxSidewaysMove"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Max Sideways Move</FormLabel>
+                              <FormControl>
+                                <Input {...field} className='bg-white/10' />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </form>
+                    </Form>
                   )}
                   { algorithm === "Random Start Hill-Climbing" && (
-                    <div>
-                      Random Start HC
-                    </div>
+                    <Form {...randomRestartForm}>
+                      <form>
+                        <FormField 
+                          control={randomRestartForm.control}
+                          name="maxRestart"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Max Restart</FormLabel>
+                              <FormControl>
+                                <Input {...field} className='bg-white/10' />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </form>
+                    </Form>
                   )}
                   { algorithm === "Genetic Algorithm" && (
-                    <div>
-                      Genetic Algorithm
-                    </div>
+                    <Form {...geneticForm}>
+                     <form className='w-full flex justify-between gap-x-4'>
+                       <FormField 
+                         control={geneticForm.control}
+                         name="populasi"
+                         render={({ field }) => (
+                           <FormItem>
+                             <FormLabel>Polulation</FormLabel>
+                             <FormControl>
+                               <Input {...field} className='bg-white/10' />
+                             </FormControl>
+                           </FormItem>
+                         )}
+                       />
+                       <FormField 
+                         control={geneticForm.control}
+                         name="iterasi"
+                         render={({ field }) => (
+                           <FormItem>
+                             <FormLabel>Iteration</FormLabel>
+                             <FormControl>
+                               <Input {...field} className='bg-white/10' />
+                             </FormControl>
+                           </FormItem>
+                         )}
+                       />
+                     </form>
+                   </Form>
                   )}
                 </div>
               )

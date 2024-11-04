@@ -8,10 +8,6 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import poppinsFontUrl from '@/app/fonts/Poppins_Regular.json'
 
-const generateRandomNumbers = (size: number) => {
-  return Array.from({ length: size * size * size }, () => Math.floor(Math.random() * 100));
-};
-
 const Cube = ({ position, number }: { position: [number, number, number]; number: number }) => {
   const font = useMemo(() => new FontLoader().parse(poppinsFontUrl), []);
   const textMeshRef = useRef<THREE.Mesh>(null!);
