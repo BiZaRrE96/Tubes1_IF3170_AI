@@ -92,9 +92,15 @@ export default function Home() {
     })
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
-      console.log(endpoint)
-      const response = await fetch(`/api/${endpoint}`)
+      const response = await fetch(`/api/${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(cubeResult)
+      })
       const data = await response.json()
+      console.log(data)
       // Set cube result
       // Set exectuion time
       // success toast 

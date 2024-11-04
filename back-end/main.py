@@ -3,6 +3,7 @@ from typing import List, Optional
 import random
 
 from algorithm.utils.magicube import generate_n_stack
+from algorithm.steepestascent import steepestascent
 
 app = FastAPI()
 
@@ -15,9 +16,10 @@ async def generate_cube(n: int, straight: Optional[bool] = False):
     result = generate_n_stack(n, straight)
     return result
 
-@app.get("/steepest-ascent-hill-climbing")
-async def steepest_ascent_hc():
-    return
+@app.post("/steepest-ascent-hill-climbing")
+async def steepest_ascent_hc(cube: List[int]):
+    result = steepestascent(cube)
+    return result
 
 @app.get("/stochastic-hill-climbing")
 async def stochastic_hc():
