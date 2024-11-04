@@ -28,6 +28,7 @@ import { ChartPlot } from './components/ChartPlot';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { set } from 'zod';
 import { CookingPot } from 'lucide-react';
+import { NodeNextRequest } from 'next/dist/server/base-http/node';
 
 export default function Home() {
   const { toast } = useToast()
@@ -108,7 +109,7 @@ export default function Home() {
 
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
-      console.log(endpoint)
+
       let bodyToSend = JSON.stringify({ cube: cubeResult })
       if (endpoint === "hill-climbing-with-sideways-move") {
         bodyToSend = JSON.stringify({
@@ -122,6 +123,12 @@ export default function Home() {
           cube: cubeResult,
           max_iteration: 3,
           max_restarts: maxRestart
+        });
+      }
+      if (endpoint === "genetic-algorithm") {
+        bodyToSend = JSON.stringify({
+          populasi: populasi,
+          iterasi: iterasi,
         });
       }
       
@@ -138,12 +145,13 @@ export default function Home() {
       console.log(data)
 
       if (data) {
+        setInitialCubeState(data.first.cube)
         setCubeResult(data.end.cube)
         setFinalObjValue(data.end.value)
         setLogs(data.log)
         setExecutionTime(data.time)
         const newGraph = convertToChartData(data)
-        setGraph(newGraph)
+        setGraph(newGraph)        
       }
       
       toast({
@@ -159,6 +167,10 @@ export default function Home() {
       setIsAlgorithmLoading(false)
       setSubmitted(true)
       setSeconds(0)
+      setMaxSidewaysMoves(0)
+      setMaxRestart(0)
+      setPopulasi(0)
+      setIterasi(0)
     }
   }
 

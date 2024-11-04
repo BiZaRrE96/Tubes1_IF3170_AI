@@ -9,6 +9,7 @@ from algorithm.stocastic import stocastic
 from algorithm.sidewaysmove import sidewaysmove
 from algorithm.randomrestart import randomrestart
 from algorithm.simulated_annealing import simulated_annealing
+from algorithm.genetic_evo_v2 import genetic_algorithm
 
 app = FastAPI()
 
@@ -23,6 +24,9 @@ class RandomStartRequest(BaseModel):
     cube: List[int]
     max_iteration: Optional[int] = None
     max_restarts: Optional[int] = None
+class GeneticRequest(BaseModel):
+    populasi: Optional[int] = None
+    iterasi: Optional[int] = None
 
 @app.get("/")
 async def root():
@@ -58,10 +62,7 @@ async def simulated_annealing_api(request: GeneralRequest):
     result = simulated_annealing(request.cube)
     return result
 
-
-
-
-
-@app.get("/genetic-algorithm")
-async def genetic_algorithm():
-    return
+@app.post("/genetic-algorithm")
+async def genetic_algorithm_api(request: GeneticRequest):
+    result = genetic_algorithm(request.populasi, request.iterasi, None)
+    return result

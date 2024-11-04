@@ -85,4 +85,6 @@ def steepestascent(cubelist : list[int] = None) -> dict:
         print("An error occurred:", e)
         cube.print()
 
+    execution_time = time.time() - start_time
+
     return standard_return(first_cube, cube, graph, execution_time, log = log)
