@@ -37,3 +37,12 @@ Run BackEnd in Localhost 8000
 ```
 uv run fastapi dev main.py
 ```
+
+<h3 align="left">Development Tools</h3>
+
+| NIM     | Kerja   |
+|:--------------------:|:---------:|
+| 13522121             | Algoritma, Back End    |
+| 13522130             | Algoritma, Back End    |
+| 13522145             | Algoritma, Back End    |
+| 13522163             | Algoritma, Front End   |
