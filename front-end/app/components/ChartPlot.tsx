@@ -55,12 +55,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartPlot({ graph }: any) {
+export function ChartPlot({ graph, title, description }: any) {
   return (
     <Card className="bg-transparent w-full border-none">
       <CardHeader>
-        <CardTitle className="text-white">Objective Function Value</CardTitle>
-        <CardDescription className="text-white">Plot of the objective function value against the number of iterations</CardDescription>
+        <CardTitle className="text-white">{title}</CardTitle>
+        <CardDescription className="text-white">{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="text-white max-h-[350px] bor">

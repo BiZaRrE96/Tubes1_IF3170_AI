@@ -47,7 +47,7 @@ export default function Home() {
   const [seconds, setSeconds] = useState<number>(0);
   const [finalObjValue, setFinalObjValue] = useState<number>(0)
   const [graph, setGraph] = useState()
-  const [simulatedAnnealingGraph, setSimulatedAnnealingGraph] = useState()
+  const [expGraph, setExpGraph] = useState()
 
   const convertToChartData = (data: any) => {
     // @ts-ignore
@@ -147,6 +147,10 @@ export default function Home() {
         setExecutionTime(data.time)
         const newGraph = convertToChartData(data)
         setGraph(newGraph)        
+
+        if (data.extra.exp_graph) {
+          setExpGraph(data.extra.exp_graph)
+        }
       }
       
       toast({
@@ -485,7 +489,14 @@ export default function Home() {
       {/* Display Chart */}
       <div className='py-4' />
       <div className='w-full flex justify-between gap-x-4 mb-12 border-2 border-white/10 rounded-xl'>
-        <ChartPlot graph={graph} />
+        <div className='flex flex-col gap-y-4 w-full'>
+        <ChartPlot graph={graph} title="Objective Function Value" description="Plot of the objective function value against the number of iterations" />
+        {
+          expGraph && (
+            <ChartPlot graph={graph} title="Exp Graph" description="Plot eET against the number of iterations passed" />
+          )
+        }
+        </div>
         <Card className='text-white w-full bg-transparent border-none'>
           <CardHeader className='font-bold'>
             Logs
