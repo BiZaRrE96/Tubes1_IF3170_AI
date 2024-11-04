@@ -111,19 +111,19 @@ def disintegrate(m1 : Magicube, m2 : Magicube) -> Magicube:
 def split(m1: Magicube, m2: Magicube) -> Magicube:
     pos : int = round(sin(random()*pi) * (m1.size**3))
     custom : list[int] = []
-    print("zzz",pos)
+    #print("zzz",pos)
     for i in range(pos):
         x = i % m1.size
         y = i // (m1.size) % m1.size 
         z = i // (m1.size**2)
-        print(x,y,z)
+        #print(x,y,z)
         custom += [m1.get(x,y,z)]
-    for i in range(pos,(m1.size**3-pos-1)):
+    for i in range(pos,(m1.size**3)):
         x = i % m1.size
         y = i // (m1.size**2) % m1.size
         z = i // (m1.size**2)
         custom += [m2.get(x,y,z)]
-    
+    #print(len(custom))
     return Magicube(m1.size,custom=custom)
         
     
@@ -158,6 +158,8 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
         else:
             child = candidates[c1].copy()
         fix_cube(child)
+        
+        #print(c1,c2)
 
         csize = candidates[c1].size
         mv = -(csize ** 3)
@@ -171,7 +173,7 @@ def breed(candidates : list[Magicube], splice_method: Callable[[Magicube,Magicub
                     #     mutation_factor = 0
                     # else:
                     #     mutation_factor = ((-f + p) * 0.5 * euler / (csize**3)) + 0.25
-        mutation_factor = 0
+        mutation_factor = 0.01
                          
         #mutation only swaps two positions so no need to refix
         mutate(child,mutation_factor)

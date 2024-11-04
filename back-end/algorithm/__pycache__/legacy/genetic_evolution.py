@@ -76,6 +76,7 @@ def mutate(cube : Magicube, severity : float) -> None:
         while (a == b):
             a = randint(1,maxint)
             b = randint(1,maxint)
+        print(a,b)
         cube.swap_num(a,b)
         
 
