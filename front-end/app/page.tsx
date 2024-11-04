@@ -109,14 +109,24 @@ export default function Home() {
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
 
-      let bodyToSend = JSON.stringify(cubeResult)
-      if (endpoint === "stochastic-hill-climbing") {
+      let bodyToSend = JSON.stringify({ cube: cubeResult });
+
+      if (endpoint === "hill-climbing-with-sideways-move") {
         bodyToSend = JSON.stringify({
           cube: cubeResult,
-          maxSidewaysMoves: maxSidewaysMoves
+          max_iteration: 3,
+          max_sidewaysmove: maxSidewaysMoves
         });
       }
 
+      if (endpoint === "random-start-hill-climbing") {
+        bodyToSend = JSON.stringify({
+          cube: cubeResult,
+          max_iteration: 3,
+          max_restarts: maxRestart
+        });
+      }
+      
       const response = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: {

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from typing import List, Optional
+from pydantic import BaseModel
 import random
 
 from algorithm.utils.magicube import generate_n_stack
@@ -9,6 +10,17 @@ from algorithm.sidewaysmove import sidewaysmove
 from algorithm.randomrestart import randomrestart
 
 app = FastAPI()
+
+# Define models for the JSON body structure
+class SidewaysRequest(BaseModel):
+    cube: List[int]
+    max_iteration: Optional[int] = None
+    max_sidewaysmove: Optional[int] = None
+
+class RandomStartRequest(BaseModel):
+    cube: List[int]
+    max_iteration: Optional[int] = None
+    max_restarts: Optional[int] = None
 
 @app.get("/")
 async def root():
@@ -30,13 +42,24 @@ async def stochastic_hc(cube: List[int]):
     return result
 
 @app.post("/hill-climbing-with-sideways-move")
-async def hc_with_sideways(cube: List[int], max_iteration: Optional[int] = 3, max_sidewaysmove: Optional[int] = 10):
-    result = sidewaysmove(cube, max_iteration, max_sidewaysmove)
+async def hc_with_sideways(request: SidewaysRequest):
+    print("MAX SIDEWAYS MOVE:", request.max_sidewaysmove)
+    result = sidewaysmove(request.cube, request.max_iteration, request.max_sidewaysmove)
     return result
 
-@app.get("/random-start-hill-climbing")
-async def random_start_hc():
-    return
+@app.post("/random-start-hill-climbing")
+async def random_start_hc(request: RandomStartRequest):
+    print("MAX RESTARTS:", request.max_restarts)
+    result = randomrestart(request.cube, request.max_iteration, request.max_restarts)
+    return result
+
+
+
+
+
+
+
+
 
 @app.get("/simulated-annealing")
 async def simulated_annealing():
