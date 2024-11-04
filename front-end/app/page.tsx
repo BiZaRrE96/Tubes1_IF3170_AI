@@ -29,24 +29,24 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export default function Home() {
   const { toast } = useToast()
-  const [algorithm, setAlgorithm] = useState("")
+  const [algorithm, setAlgorithm] = useState<string>("")
   const [cubeResult, setCubeResult] = useState();
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const [initialCubeState, setInitialCubeState] = useState();
   const [loading, setLoading] = useState(false);
   const [cubeState, setCubeState] = useState<"Initial" | "Final">("Initial");
-  const [isAlgorithmLoading, setIsAlgorithmLoading] = useState(false)
+  const [isAlgorithmLoading, setIsAlgorithmLoading] = useState<boolean>(false)
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
-  const [executionTime, setExecutionTime] = useState(0.00)
+  const [executionTime, setExecutionTime] = useState<number>(0.00)
   // Hill-Climbing with Sideways Move
-  const [maxSidewaysMoves, setMaxSidewaysMoves] = useState(0)
+  const [maxSidewaysMoves, setMaxSidewaysMoves] = useState<number>(0)
   // Random Start Hill-Climbing
   const [maxRestart, setMaxRestart] = useState<number>(0)
   // Genetic Algorithm
   const [populasi, setPopulasi] = useState<number>(0)
   const [iterasi, setIterasi] = useState<number>(0)
-  const [logs, setLogs] = useState("")
-  const [seconds, setSeconds] = useState(0);
+  const [logs, setLogs] = useState<string>("")
+  const [seconds, setSeconds] = useState<number>(0);
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
@@ -63,6 +63,7 @@ export default function Home() {
   const generateCube = async () => {
     setLoading(true)
     setAlgorithm("")
+    setSeconds(0)
     try {
       const n = 125;
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
@@ -133,10 +134,10 @@ export default function Home() {
         setSeconds(prevSeconds => prevSeconds + 1);
       }, 1000);
     } else {
-      setSeconds(0); // Reset ketika loading selesai
+      setSeconds(0); 
     }
 
-    return () => clearInterval(timer); // Clear interval saat komponen unmount atau loading selesai
+    return () => clearInterval(timer);
   }, [isAlgorithmLoading]);
 
   return (
