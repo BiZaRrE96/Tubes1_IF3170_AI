@@ -136,10 +136,6 @@ export default function Home() {
         body: bodyToSend
       })
 
-      // const response = await fetch(`/api/${endpoint}`, {
-      //   method: "GET"
-      // })
-
       const data = await response.json()
       console.log(data)
 
