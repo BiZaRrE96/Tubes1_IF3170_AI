@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from typing import List, Optional
 import random
 
-from algorithm.magicube import generate_n_stack
+from algorithm.utils.magicube import generate_n_stack
 
 app = FastAPI()
 
