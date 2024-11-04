@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { ChartPlot } from './components/ChartPlot';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { set } from 'zod';
 
 export default function Home() {
   const { toast } = useToast()
@@ -47,6 +48,7 @@ export default function Home() {
   const [iterasi, setIterasi] = useState<number>(0)
   const [logs, setLogs] = useState<string>("")
   const [seconds, setSeconds] = useState<number>(0);
+  const [finalObjValue, setFinalObjValue] = useState<number>(0)
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
@@ -90,6 +92,7 @@ export default function Home() {
       title: "Searching...",
       description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
     })
+
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
       const response = await fetch(`/api/${endpoint}`, {
@@ -101,9 +104,17 @@ export default function Home() {
       })
       const data = await response.json()
       console.log(data)
-      // Set cube result
-      // Set exectuion time
-      // success toast 
+
+      if (data) {
+        setCubeResult(data.end.cube)
+        setFinalObjValue(data.end.value)
+        setLogs(data.log)
+        setExecutionTime(data.time)
+      }
+      
+      toast({
+        title: "Successfully generated cube",
+      })
     } catch (error) {
       console.error("Failed to fetch:", error)
       toast({
@@ -374,7 +385,7 @@ export default function Home() {
           {/* Result Box */}
           <div className='w-full border-t-2 border-white/25 mt-4 py-4 flex flex-col items-start'>
             <p>Time Execition : {executionTime}</p>
-            <p>Objective Function Value : </p>
+            <p>Objective Function Value : {finalObjValue} </p>
           </div>
         </ResizablePanel>
         <ResizableHandle className='z-20 w-[1px] bg-white h-[575px] hidden md:block' withHandle />

@@ -6,7 +6,7 @@ from .utils.standard_return import standard_return
 import time
 
 n: int = 5
-MAX_ITERATION: int = 10000
+MAX_ITERATION: int = 1
 
 def steepestascent(cubelist : list[int] = None) -> dict:
     
