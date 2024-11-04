@@ -79,13 +79,13 @@ export function ChartPlot({ graph }: any) {
               content={
                 <ChartTooltipContent
                   indicator="line"
-                  nameKey="visitors"
+                  nameKey="Fitness Value"
                   hideLabel
                 />
               }
             />
             <Line
-              dataKey="Fitness Value"
+              dataKey="fitness_value"
               type="natural"
               stroke="white"
               strokeWidth={1}

@@ -54,9 +54,9 @@ export default function Home() {
 
   const convertToChartData = (data: any) => {
     // @ts-ignore
-    return data.graph.map((visitors, index) => ({
+    return data.graph.map((fitness_value, index) => ({
       browser: `Browser ${index + 1}`,
-      visitors: visitors,
+      fitness_value: fitness_value,
       fill: "white",
     }));
   };
@@ -117,9 +117,6 @@ export default function Home() {
         });
       }
 
-      console.log("maxSidewaysMoves: ", maxSidewaysMoves)
-
-      console.log(bodyToSend)
       const response = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: {
