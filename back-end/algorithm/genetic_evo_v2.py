@@ -1,7 +1,7 @@
-from Magicubev2 import Magicube2 as Magicube
+from .utils.Magicubev2 import Magicube2 as Magicube
 from random import random
 from random import choice
-import traversal as t
+from .utils import traversal as t
 from typing import Callable
 from math import exp
 from math import log

@@ -1,7 +1,7 @@
 import random
 import math
-from magicube import Magicube
-from magicube_adder import fitness, deviation
+from .utils.magicube import Magicube
+from .utils.magicube_adder import fitness, deviation
 import matplotlib.pyplot as plt
 import time
 

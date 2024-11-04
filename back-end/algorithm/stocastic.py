@@ -1,6 +1,6 @@
-import magicube_adder as ma
-import magicube as m
-import traversal as t
+from .utils import magicube_adder as ma
+from .utils import magicube as m
+from .utils import traversal as t
 import random
 import time
 

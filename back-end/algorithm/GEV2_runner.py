@@ -33,6 +33,16 @@ def max_fitness(lc : list[Magicube]):
             max = cube.get_fitness()
     return max
 
+def best_cube(lc : list[Magicube]):
+    mpos = 0
+    max = -999999
+    bestcube : Magicube = None
+    for cube in lc:
+        if cube.get_fitness() > max :
+            bestcube = cube.copy()
+            max = cube.get_fitness()
+    return bestcube
+
 def run(cl : list[Magicube], itterations : int ,method, report : list = None):
     cubes : list[Magicube] = cl.copy()
 
@@ -45,7 +55,22 @@ def run(cl : list[Magicube], itterations : int ,method, report : list = None):
     if report != None:
         report += [report_avg_cubes(cubes)]
     print("=====")
+
+#use samples if want to define samples, use sample count to tell how many to generate
+def run_FE(itterations : int, samples : list[list[int]] = None, sample_count = 4):
+    cubes : list[Magicube]
+    if samples != None:
+        for sample in samples:
+            cubes += [Magicube(5,custom=sample)]
+    else:
+        cubes = [Magicube(5) for i in range(sample_count)]
     
+    report : list = None
+    
+    best_first = max_fitness(cubes)
+    
+    for i in range(itterations):
+        cubes = run
 
 def test_wrapper():
     ###START
