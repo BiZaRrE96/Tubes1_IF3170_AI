@@ -108,9 +108,8 @@ export default function Home() {
 
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
-
-      let bodyToSend = JSON.stringify({ cube: cubeResult });
-
+      console.log(endpoint)
+      let bodyToSend = JSON.stringify({ cube: cubeResult })
       if (endpoint === "hill-climbing-with-sideways-move") {
         bodyToSend = JSON.stringify({
           cube: cubeResult,
@@ -118,7 +117,6 @@ export default function Home() {
           max_sidewaysmove: maxSidewaysMoves
         });
       }
-
       if (endpoint === "random-start-hill-climbing") {
         bodyToSend = JSON.stringify({
           cube: cubeResult,
@@ -136,6 +134,8 @@ export default function Home() {
       })
 
       const data = await response.json()
+
+      console.log(data)
 
       if (data) {
         setCubeResult(data.end.cube)
