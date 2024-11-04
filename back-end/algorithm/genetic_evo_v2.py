@@ -1,4 +1,5 @@
 from .utils.Magicubev2 import Magicube2 as Magicube
+from .utils.magicube import generate_vector
 from random import random
 from random import choice
 from .utils import traversal as t
@@ -10,8 +11,6 @@ from math import sin as sin
 from math import pi as pi
 #testing purposes only
 from random import randint
-
-from hilltest import generate_vector
 
 class wheel_spinner:
     def __init__(self, value_list: list[float], flip : bool = False) -> None:
