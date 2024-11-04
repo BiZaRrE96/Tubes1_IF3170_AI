@@ -1,6 +1,7 @@
 import random
 from . import exceptions as ex
 import copy
+from .traversal import Vector3
 
 # Generate a list of numbers from 1 to n, and randomized into a list
 def generate_n_stack(n: int, straight: bool = False):
@@ -14,6 +15,9 @@ def generate_n_stack(n: int, straight: bool = False):
         numbers = numbers[:get] + numbers[get+1:]
     return retval
     pass    
+
+def generate_vector(n: int, size: int) -> Vector3:
+    return Vector3([n % size, n // (size) % size, n // (size**2)])
 
 #X < > (Kiri kanan); Y /\ \/ (atas bawah); Z (+) (-) (depan belakang)
 #therefore Magicube.numbers[Z][Y][X]
