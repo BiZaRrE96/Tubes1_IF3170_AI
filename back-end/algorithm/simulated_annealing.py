@@ -3,7 +3,6 @@ import math
 from .utils.Magicubev2 import Magicube2 as Magicube
 from .utils.magicube_adder import fitness, deviation
 from .utils.standard_return import standard_return
-import matplotlib.pyplot as plt
 import time
 
 def generate_neighbor(cube : Magicube):
@@ -43,7 +42,7 @@ def simulated_annealing(cubelist : list[int]=None, initial_temp=None, cooling_ra
     if cooling_rate != None:
         pass
     else:
-        cooling_rate = 0.99995
+        cooling_rate = 0.9995
         print("cooling rate unset! setting to 0.99995...")
         log += "INITIAL TEMP UNSET\n"
 
@@ -106,6 +105,7 @@ def simulated_annealing(cubelist : list[int]=None, initial_temp=None, cooling_ra
         exp_term_list.append(exp_term)
 
         temp *= cooling_rate
+        temp = round(temp, 5)
         iteration += 1
 
         print(f"Iteration: {iteration}, Temperature: {temp}, Fitness: {best_fitness}, Deviation: {best_deviation}")

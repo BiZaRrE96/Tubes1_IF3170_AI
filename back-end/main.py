@@ -1,11 +1,28 @@
 from fastapi import FastAPI
 from typing import List, Optional
+from pydantic import BaseModel
 import random
 
 from algorithm.utils.magicube import generate_n_stack
 from algorithm.steepestascent import steepestascent
+from algorithm.stocastic import stocastic
+from algorithm.sidewaysmove import sidewaysmove
+from algorithm.randomrestart import randomrestart
+from algorithm.simulated_annealing import simulated_annealing
 
 app = FastAPI()
+
+# Define models for the JSON body structure
+class GeneralRequest(BaseModel):
+    cube: List[int]
+class SidewaysRequest(BaseModel):
+    cube: List[int]
+    max_iteration: Optional[int] = None
+    max_sidewaysmove: Optional[int] = None
+class RandomStartRequest(BaseModel):
+    cube: List[int]
+    max_iteration: Optional[int] = None
+    max_restarts: Optional[int] = None
 
 @app.get("/")
 async def root():
@@ -17,25 +34,33 @@ async def generate_cube(n: int, straight: Optional[bool] = False):
     return result
 
 @app.post("/steepest-ascent-hill-climbing")
-async def steepest_ascent_hc(cube: List[int]):
-    result = steepestascent(cube)
+async def steepest_ascent_hc(request: GeneralRequest):
+    result = steepestascent(request.cube)
     return result
 
-@app.get("/stochastic-hill-climbing")
-async def stochastic_hc():
-    return
+@app.post("/stochastic-hill-climbing")
+async def stochastic_hc(request: GeneralRequest):
+    result = stocastic(request.cube)
+    return result
 
-@app.get("/hill-climbing-with-sideways-move")
-async def hc_with_sideways():
-    return
+@app.post("/hill-climbing-with-sideways-move")
+async def hc_with_sideways(request: SidewaysRequest):
+    result = sidewaysmove(request.cube, request.max_iteration, request.max_sidewaysmove)
+    return result
 
-@app.get("/random-start-hill-climbing")
-async def random_start_hc():
-    return
+@app.post("/random-start-hill-climbing")
+async def random_start_hc(request: RandomStartRequest):
+    result = randomrestart(request.cube, request.max_iteration, request.max_restarts)
+    return result
 
-@app.get("/simulated-annealing")
-async def simulated_annealing():
-    return
+@app.post("/simulated-annealing")
+async def simulated_annealing_api(request: GeneralRequest):
+    result = simulated_annealing(request.cube)
+    return result
+
+
+
+
 
 @app.get("/genetic-algorithm")
 async def genetic_algorithm():

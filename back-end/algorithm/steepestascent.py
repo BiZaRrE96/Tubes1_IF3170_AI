@@ -6,7 +6,7 @@ from .utils.standard_return import standard_return
 import time
 
 n: int = 5
-MAX_ITERATION: int = 2
+MAX_ITERATION: int = 3
 
 def steepestascent(cubelist : list[int] = None) -> dict:
     
@@ -29,7 +29,7 @@ def steepestascent(cubelist : list[int] = None) -> dict:
             current_fitness = cube.get_fitness()
             
             print(f"Iteration {i + 1} - Starting fitness: {current_fitness}")
-            log += (f"Iteration {i + 1} - Starting fitness: {current_fitness}") + "\n"
+            log += (f"Iteration {i + 1} - Starting fitness: {current_fitness}") + "\n\n"
             
             # Break if optimal solution is found (based on a positive fitness threshold, if applicable)
             if current_fitness >= 0.0:
@@ -78,15 +78,11 @@ def steepestascent(cubelist : list[int] = None) -> dict:
 
         print("Final cube configuration:")
         cube.print()
-        end_time = time.time()
-        execution_time = end_time - start_time
-        print(f"Execution time: {execution_time:.2f} seconds")
+        log.print()
         
         
-
     except Exception as e:
         print("An error occurred:", e)
         cube.print()
 
-    log = f"Itterations : {runs} |\n" + log
     return standard_return(first_cube, cube, graph, execution_time, log = log)

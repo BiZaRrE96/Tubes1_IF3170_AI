@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input"
 import { ChartPlot } from './components/ChartPlot';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { set } from 'zod';
+import { CookingPot } from 'lucide-react';
 
 export default function Home() {
   const { toast } = useToast()
@@ -49,6 +50,16 @@ export default function Home() {
   const [logs, setLogs] = useState<string>("")
   const [seconds, setSeconds] = useState<number>(0);
   const [finalObjValue, setFinalObjValue] = useState<number>(0)
+  const [graph, setGraph] = useState()
+
+  const convertToChartData = (data: any) => {
+    // @ts-ignore
+    return data.graph.map((fitness_value, index) => ({
+      browser: `Browser ${index + 1}`,
+      fitness_value: fitness_value,
+      fill: "white",
+    }));
+  };
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
@@ -66,11 +77,13 @@ export default function Home() {
     setLoading(true)
     setAlgorithm("")
     setSeconds(0)
+
     try {
       const n = 125;
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
       const data = await response.json()
       setCubeResult(data)  
+      setInitialCubeState(data)
       toast({
         title: "Cube Generated!",
         description: "Successfully generated 125 random numbers"
@@ -95,14 +108,33 @@ export default function Home() {
 
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
+      console.log(endpoint)
+      let bodyToSend = JSON.stringify({ cube: cubeResult })
+      if (endpoint === "hill-climbing-with-sideways-move") {
+        bodyToSend = JSON.stringify({
+          cube: cubeResult,
+          max_iteration: 3,
+          max_sidewaysmove: maxSidewaysMoves
+        });
+      }
+      if (endpoint === "random-start-hill-climbing") {
+        bodyToSend = JSON.stringify({
+          cube: cubeResult,
+          max_iteration: 3,
+          max_restarts: maxRestart
+        });
+      }
+      
       const response = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(cubeResult)
+        body: bodyToSend
       })
+
       const data = await response.json()
+
       console.log(data)
 
       if (data) {
@@ -110,6 +142,8 @@ export default function Home() {
         setFinalObjValue(data.end.value)
         setLogs(data.log)
         setExecutionTime(data.time)
+        const newGraph = convertToChartData(data)
+        setGraph(newGraph)
       }
       
       toast({
@@ -121,6 +155,7 @@ export default function Home() {
         title: "Failed to Generate Cube"
       })
     } finally {
+      setAlgorithm("")
       setIsAlgorithmLoading(false)
       setSubmitted(true)
       setSeconds(0)
@@ -277,7 +312,14 @@ export default function Home() {
                             <FormItem>
                               <FormLabel>Max Sideways Move</FormLabel>
                               <FormControl>
-                                <Input {...field} className='bg-white/10' />
+                                <Input 
+                                  {...field} 
+                                  className='bg-white/10' 
+                                  onChange={(event) => { 
+                                    setMaxSidewaysMoves(Number(event.target.value)); 
+                                    field.onChange(event); 
+                                  }}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
@@ -420,14 +462,23 @@ export default function Home() {
             </div>
           )
         }
-          <MagicCube numbers={cubeResult} />
+        {
+          cubeState === "Initial" && (
+            <MagicCube numbers={initialCubeState} />
+          )
+        }
+        {
+          cubeState === "Final" && (
+            <MagicCube numbers={cubeResult} />
+          )
+        }
         </ResizablePanel>
       </ResizablePanelGroup>
 
       {/* Display Chart */}
       <div className='py-4' />
       <div className='w-full flex justify-between gap-x-4 mb-12 border-2 border-white/10 rounded-xl'>
-        <ChartPlot />
+        <ChartPlot graph={graph} />
         <Card className='text-white w-full bg-transparent border-none'>
           <CardHeader className='font-bold'>
             Logs

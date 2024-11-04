@@ -55,7 +55,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartPlot() {
+export function ChartPlot({ graph }: any) {
   return (
     <Card className="bg-transparent w-full border-none">
       <CardHeader>
@@ -66,7 +66,7 @@ export function ChartPlot() {
         <ChartContainer config={chartConfig} className="text-white max-h-[350px] bor">
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={graph}
             margin={{
               top: 24,
               left: 24,
@@ -79,13 +79,13 @@ export function ChartPlot() {
               content={
                 <ChartTooltipContent
                   indicator="line"
-                  nameKey="visitors"
+                  nameKey="Fitness Value"
                   hideLabel
                 />
               }
             />
             <Line
-              dataKey="visitors"
+              dataKey="fitness_value"
               type="natural"
               stroke="white"
               strokeWidth={1}

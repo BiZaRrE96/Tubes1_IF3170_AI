@@ -27,14 +27,14 @@ def sidewaysmove(cubelist : list[int] = None, max_iteration : int = None, max_si
     if max_iteration != None:
         pass
     else:
-        max_iteration = 8
+        max_iteration = 3
         print("Max itteration unset, setting to 8")
         log += "MAX ITTERATION UNSET\n"
 
     if max_sidewaysmove != None:
         sideways_moves_limit = max_sidewaysmove
     else:
-        sideways_moves_limit = 8
+        sideways_moves_limit = 3
         print("Max sidewaysmove unset, setting to 10")
         log += "MAX SIDEWAYS MOVE UNSET\n"
 
