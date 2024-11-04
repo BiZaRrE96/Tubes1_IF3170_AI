@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { geneticAlgorithm, geneticAlgorithmType, maxRestarts, maxRestartType, maxSidewaysMove, maxSidewaysMoveType } from '@/lib/schemas';
+import { AlgorithmEnum, geneticAlgorithm, geneticAlgorithmType, maxRestarts, maxRestartType, maxSidewaysMove, maxSidewaysMoveType } from '@/lib/schemas';
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -29,7 +29,9 @@ export default function Home() {
   const { toast } = useToast()
   const [algorithm, setAlgorithm] = useState("")
   const [cubeResult, setCubeResult] = useState();
+  const [initialCubeState, setInitialCubeState] = useState();
   const [loading, setLoading] = useState(false);
+  const [cubeState, setCubeState] = useState<"Initial" | "Final">("Initial");
   const [isAlgorithmLoading, setIsAlgorithmLoading] = useState(false)
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
   const [executionTime, setExecutionTime] = useState(0.00)
@@ -323,10 +325,34 @@ export default function Home() {
         <ResizableHandle className='z-20 w-[1px] bg-white h-[550px] hidden md:block' withHandle />
         
         {/* Magic Cube Display */}
-        <ResizablePanel defaultSize={60} className='hidden md:block border-2 border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
+        <ResizablePanel defaultSize={60} className='hidden md:block border-2 relative border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
+          <div className='w-full flex items-center justify-center gap-x-4 absolute top-4'>
+            <Button 
+              variant={"outline"}
+              className={cn(
+                'bg-white/10 text-white',
+                cubeState === "Initial" && "bg-white/50"
+              )} 
+              onClick={() => setCubeState("Initial")}
+            >
+              Initial State
+            </Button>
+            <Button 
+              variant={"outline"}
+              className={cn(
+                'bg-white/10 text-white',
+                cubeState === "Final" && "bg-white/50"
+              )} 
+              onClick={() => setCubeState("Final")}
+            >
+              Final State
+            </Button>
+          </div>
           <MagicCube numbers={cubeResult} />
         </ResizablePanel>
       </ResizablePanelGroup>
+
+      Result
     </main>
   );
 }

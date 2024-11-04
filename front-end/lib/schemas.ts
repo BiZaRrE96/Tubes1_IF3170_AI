@@ -15,3 +15,12 @@ export const geneticAlgorithm = z.object({
   iterasi: z.number().int().min(0).max(100)
 })
 export type geneticAlgorithmType = z.infer<typeof geneticAlgorithm>
+
+export enum AlgorithmEnum {
+  "Steepest Ascent-Hill-Climbing",
+  "Stochastic Hill-Climbing",
+  "Hill-Climbing With Sideways Move",
+  "Random Start Hill-Climbing",
+  "Simulated-Annealing",
+  "Genetic Algorithm"
+}
