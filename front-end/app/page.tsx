@@ -110,14 +110,14 @@ export default function Home() {
       if (endpoint === "hill-climbing-with-sideways-move") {
         bodyToSend = JSON.stringify({
           cube: cubeResult,
-          max_iteration: 3,
+          max_iteration: 100000,
           max_sidewaysmove: maxSidewaysMoves
         });
       }
       if (endpoint === "random-start-hill-climbing") {
         bodyToSend = JSON.stringify({
           cube: cubeResult,
-          max_iteration: 3,
+          max_iteration: 100000,
           max_restarts: maxRestart
         });
       }
