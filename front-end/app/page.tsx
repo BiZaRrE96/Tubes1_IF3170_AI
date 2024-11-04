@@ -12,23 +12,18 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { AlgorithmEnum, geneticAlgorithm, geneticAlgorithmType, maxRestarts, maxRestartType, maxSidewaysMove, maxSidewaysMoveType } from '@/lib/schemas';
+import { geneticAlgorithm, geneticAlgorithmType, maxRestarts, maxRestartType, maxSidewaysMove, maxSidewaysMoveType } from '@/lib/schemas';
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { ChartPlot } from './components/ChartPlot';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { set } from 'zod';
-import { CookingPot } from 'lucide-react';
-import { NodeNextRequest } from 'next/dist/server/base-http/node';
 
 export default function Home() {
   const { toast } = useToast()
@@ -52,6 +47,7 @@ export default function Home() {
   const [seconds, setSeconds] = useState<number>(0);
   const [finalObjValue, setFinalObjValue] = useState<number>(0)
   const [graph, setGraph] = useState()
+  const [simulatedAnnealingGraph, setSimulatedAnnealingGraph] = useState()
 
   const convertToChartData = (data: any) => {
     // @ts-ignore
@@ -81,7 +77,7 @@ export default function Home() {
 
     try {
       const n = 125;
-      const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
+      const response = await fetch(`http://localhost:8000/generate-cube?n=${n}&straight=false`)
       const data = await response.json()
       setCubeResult(data)  
       setInitialCubeState(data)
@@ -132,7 +128,7 @@ export default function Home() {
         });
       }
       
-      const response = await fetch(`/api/${endpoint}`, {
+      const response = await fetch(`http://localhost:8000/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -140,8 +136,11 @@ export default function Home() {
         body: bodyToSend
       })
 
-      const data = await response.json()
+      // const response = await fetch(`/api/${endpoint}`, {
+      //   method: "GET"
+      // })
 
+      const data = await response.json()
       console.log(data)
 
       if (data) {

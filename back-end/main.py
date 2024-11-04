@@ -10,8 +10,16 @@ from algorithm.sidewaysmove import sidewaysmove
 from algorithm.randomrestart import randomrestart
 from algorithm.simulated_annealing import simulated_annealing
 from algorithm.genetic_evo_v2 import genetic_algorithm
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Define models for the JSON body structure
 class GeneralRequest(BaseModel):
@@ -28,6 +36,9 @@ class GeneticRequest(BaseModel):
     populasi: Optional[int] = None
     iterasi: Optional[int] = None
 
+lastResponse: dict = {}
+processdone: bool = False
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -37,11 +48,23 @@ async def generate_cube(n: int, straight: Optional[bool] = False):
     result = generate_n_stack(n, straight)
     return result
 
+# Steepest Ascent Hill Climbing
 @app.post("/steepest-ascent-hill-climbing")
 async def steepest_ascent_hc(request: GeneralRequest):
+    # global lastResponse
+    # global processdone
+    # processdone = False
     result = steepestascent(request.cube)
     return result
+    # lastResponse = result
+    # processdone = True
 
+@app.get("/steepest-ascent-hill-climbing")
+async def get_steepest_ascent_hc():
+    return lastResponse if processdone == True else {"Fuck off" : True}
+
+
+# 
 @app.post("/stochastic-hill-climbing")
 async def stochastic_hc(request: GeneralRequest):
     result = stocastic(request.cube)
