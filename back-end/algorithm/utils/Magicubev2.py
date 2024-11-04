@@ -1,6 +1,5 @@
-import magicube as m
-import traversal as t
-import magicube_adder as a
+from . import magicube as m
+from . import magicube_adder as a
 import copy
 
 class Magicube2(m.Magicube):

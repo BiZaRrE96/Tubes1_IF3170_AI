@@ -103,6 +103,13 @@ class Magicube:
         new_cube.numbers = copy.deepcopy(self.numbers)
         return new_cube
         #HERE
+        
+    def to_list(self):
+        retval : list[int] = []
+        for i in range(self.size**3):
+            loc : Vector3 = generate_vector(i,self.size)
+            retval += [self.get(loc.x,loc.y,loc.z)]
+        return retval
 
 def copy_cube(m1 : Magicube, m2 : Magicube):
     m1.size = m2.size
