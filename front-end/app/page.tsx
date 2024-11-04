@@ -64,11 +64,8 @@ export default function Home() {
     setAlgorithm("")
     try {
       const n = 125;
-      console.log("FETCHING...")
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
-      console.log("RESPONSE:", response)
       const data = await response.json()
-      console.log("RES YG UDAH JSON", data)
       setCubeResult(data)  
       toast({
         title: "Cube Generated!",
@@ -103,7 +100,7 @@ export default function Home() {
         title: "Failed to Generate Cube"
       })
     } finally {
-      // setIsAlgorithmLoading(false)
+      setIsAlgorithmLoading(false)
       setSubmitted(true)
     }
   }
@@ -156,7 +153,6 @@ export default function Home() {
                   )} 
                   onClick={() => {
                     setAlgorithm("Steepest Ascent-Hill-Climbing")
-                    // generateCubeByAlgorithm("Steepest Ascent-Hill-Climbing")
                   }}
                 >
                   Steepest Ascent Hill-Climbing
@@ -170,7 +166,6 @@ export default function Home() {
                   )} 
                   onClick={() => {
                     setAlgorithm("Stochastic Hill-Climbing")
-                    // generateCubeByAlgorithm("Stochastic Hill-Climbing")
                   }}
                 >
                   Stochastic Hill-Climbing
@@ -184,7 +179,6 @@ export default function Home() {
                   )} 
                   onClick={() => { 
                     setAlgorithm("Hill-Climbing With Sideways Move")  
-                    // generateCubeByAlgorithm("Hill-Climbing With Sideways Move") 
                   }}
                 >
                   Hill-Climbing With Sideways Move
@@ -198,7 +192,6 @@ export default function Home() {
                   )} 
                   onClick={() => { 
                     setAlgorithm("Random Start Hill-Climbing")
-                    // generateCubeByAlgorithm("Random Restart Hill-Climbing") 
                   }}
                 >
                   Random Restart Hill-Climbing
@@ -217,7 +210,6 @@ export default function Home() {
                   )} 
                   onClick={() => { 
                     setAlgorithm("Simulated-Annealing")
-                    // generateCubeByAlgorithm("Simulated-Annealing")
                   }}
                 >
                   Simulated Annealing
@@ -231,7 +223,6 @@ export default function Home() {
                   )} 
                   onClick={() => { 
                     setAlgorithm("Genetic Algorithm")
-                    // generateCubeByAlgorithm("Genetic-Algorithm")
                   }}
                 >
                   Genetic Algorithm
@@ -240,7 +231,7 @@ export default function Home() {
             </div>
             {
               algorithm && (
-                <div className='text-white mt-2'>
+                <div className='text-white'>
                   { algorithm === "Hill-Climbing With Sideways Move" && (
                     <Form {...sidewaysForm}>
                       <form>
@@ -311,6 +302,18 @@ export default function Home() {
               )
             }
           </div>
+          {/* Submit */}
+          {algorithm && (
+            <Button 
+              disabled={isAlgorithmLoading} 
+              className='mt-2 w-full z-20 max-w-[200px]' 
+              variant={"secondary"}
+              onClick={() => {generateCubeByAlgorithm(algorithm)}}
+            >
+              Search
+            </Button>
+          )}
+
           {/* Result Box */}
           <div className='w-full border-t-2 border-white/25 mt-4 py-4 flex flex-col items-start'>
             <p>Time Execition : {executionTime}</p>

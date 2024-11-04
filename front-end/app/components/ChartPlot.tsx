@@ -87,7 +87,7 @@ export function ChartPlot() {
             <Line
               dataKey="visitors"
               type="natural"
-              stroke="var(--color-visitors)"
+              stroke="white"
               strokeWidth={1}
               dot={({ payload, ...props }) => {
                 return (
@@ -96,8 +96,8 @@ export function ChartPlot() {
                     r={5}
                     cx={props.cx}
                     cy={props.cy}
-                    fill={payload.fill}
-                    stroke={payload.fill}
+                    fill={"black"}
+                    stroke={"white"}
                   />
                 )
               }}
