@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input"
 import { ChartPlot } from './components/ChartPlot';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { set } from 'zod';
+import { CookingPot } from 'lucide-react';
 
 export default function Home() {
   const { toast } = useToast()
@@ -49,6 +50,16 @@ export default function Home() {
   const [logs, setLogs] = useState<string>("")
   const [seconds, setSeconds] = useState<number>(0);
   const [finalObjValue, setFinalObjValue] = useState<number>(0)
+  const [graph, setGraph] = useState()
+
+  const convertToChartData = (data: any) => {
+    // @ts-ignore
+    return data.graph.map((visitors, index) => ({
+      browser: `Browser ${index + 1}`,
+      visitors: visitors,
+      fill: "white",
+    }));
+  };
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
@@ -66,11 +77,13 @@ export default function Home() {
     setLoading(true)
     setAlgorithm("")
     setSeconds(0)
+
     try {
       const n = 125;
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
       const data = await response.json()
       setCubeResult(data)  
+      setInitialCubeState(data)
       toast({
         title: "Cube Generated!",
         description: "Successfully generated 125 random numbers"
@@ -88,6 +101,7 @@ export default function Home() {
   const generateCubeByAlgorithm = async (algorithm: string) => {
     setIsAlgorithmLoading(true)
     setInitialCubeState(cubeResult)
+
     toast({
       title: "Searching...",
       description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
@@ -102,6 +116,7 @@ export default function Home() {
         },
         body: JSON.stringify(cubeResult)
       })
+
       const data = await response.json()
       console.log(data)
 
@@ -110,6 +125,9 @@ export default function Home() {
         setFinalObjValue(data.end.value)
         setLogs(data.log)
         setExecutionTime(data.time)
+        const newGraph = convertToChartData(data)
+        console.log(newGraph)
+        setGraph(newGraph)
       }
       
       toast({
@@ -121,6 +139,7 @@ export default function Home() {
         title: "Failed to Generate Cube"
       })
     } finally {
+      setAlgorithm("")
       setIsAlgorithmLoading(false)
       setSubmitted(true)
       setSeconds(0)
@@ -420,14 +439,23 @@ export default function Home() {
             </div>
           )
         }
-          <MagicCube numbers={cubeResult} />
+        {
+          cubeState === "Initial" && (
+            <MagicCube numbers={initialCubeState} />
+          )
+        }
+        {
+          cubeState === "Final" && (
+            <MagicCube numbers={cubeResult} />
+          )
+        }
         </ResizablePanel>
       </ResizablePanelGroup>
 
       {/* Display Chart */}
       <div className='py-4' />
       <div className='w-full flex justify-between gap-x-4 mb-12 border-2 border-white/10 rounded-xl'>
-        <ChartPlot />
+        <ChartPlot graph={graph} />
         <Card className='text-white w-full bg-transparent border-none'>
           <CardHeader className='font-bold'>
             Logs
