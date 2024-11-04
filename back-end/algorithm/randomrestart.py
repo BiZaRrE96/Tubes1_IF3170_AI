@@ -129,5 +129,5 @@ def randomrestart(cubelist : list[int] = None, max_iteration : int = None, max_r
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Execution time: {execution_time:.2f} seconds")
-    
+    log = f"Itterations : {total_iterations} |\n" + log
     return standard_return(first_cube,cube,graph,execution_time,log)

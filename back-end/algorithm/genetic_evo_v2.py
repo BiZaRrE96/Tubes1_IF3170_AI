@@ -217,6 +217,7 @@ def best_cube(lc : list[Magicube]):
 #use samples if want to define samples, use sample count to tell how many to generate
 def genetic_algorithm(sample_count : int = None, itterations : int = None, methodstr : str = None):
     #return values
+    runs : int = 0
     start_time = time.time()
     log : str = ""
 
@@ -257,6 +258,7 @@ def genetic_algorithm(sample_count : int = None, itterations : int = None, metho
     
     try:
         for i in range(itterations):
+            runs += 1
             cubes = breed(cubes,method)
             
             report = report_avg_cubes(cubes)
@@ -277,5 +279,6 @@ def genetic_algorithm(sample_count : int = None, itterations : int = None, metho
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Execution time: {execution_time:.2f} seconds")
+    log = f"Itterations : {runs} |\n" + log
     
     return standard_return(first_cube,best_cube(cubes),graph,execution_time,log,{"graph_avg" : graph_avg})

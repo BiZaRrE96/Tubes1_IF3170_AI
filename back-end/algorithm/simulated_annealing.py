@@ -127,7 +127,7 @@ def simulated_annealing(cubelist : list[int]=None, initial_temp=None, cooling_ra
     print("RESULT")
     print(f"Best Fitness: {best_fitness}, Best Deviation: {best_deviation}, Iteration: {iteration}, Time: {time_exec}, Stuck Frequency: {stuck_frequency}")
     log =(f"Best Fitness: {best_fitness}\nBest Deviation: {best_deviation}\nIteration: {iteration}\nTime: {time_exec}\nStuck Frequency: {stuck_frequency}") + log
-
+    log = f"Itterations : {iteration} |\n" + log
     return standard_return(first_cube,best_cube,max_fitness_list,time_exec,log,{"avg_graph":avg_fitness_list,"exp_graph":exp_term_list,"stuck_freq":stuck_frequency})
     ##return best_fitness, max_fitness_list, avg_fitness_list, exp_term_list, iteration, time_exec, stuck_frequency
 

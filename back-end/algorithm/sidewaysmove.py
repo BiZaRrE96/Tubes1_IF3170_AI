@@ -15,6 +15,7 @@ def sidewaysmove(cubelist : list[int] = None, max_iteration : int = None, max_si
     #return values
     start_time = time.time()
     log : str = ""
+    runs : int = 0
     
     if cubelist != None:
         cube: Magicube = Magicube(n,custom=cubelist)
@@ -121,5 +122,6 @@ def sidewaysmove(cubelist : list[int] = None, max_iteration : int = None, max_si
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Execution time: {execution_time:.2f} seconds")
+    log = f"Itterations : {runs} |\n" + log
 
     return standard_return(first_cube,cube,graph,execution_time,log)

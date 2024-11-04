@@ -6,9 +6,11 @@ from .utils.standard_return import standard_return
 import time
 
 n: int = 5
-MAX_ITERATION: int = 1
+MAX_ITERATION: int = 2
 
 def steepestascent(cubelist : list[int] = None) -> dict:
+    
+    runs : int = 0
     
     if cubelist != None:
         cube: Magicube = Magicube(n,custom=cubelist)
@@ -67,6 +69,7 @@ def steepestascent(cubelist : list[int] = None) -> dict:
                 # Stop the loop if no better solution is found (local optimum reached)
                 print(f"End of iteration {i + 1} - No better solution found, stopping.")
                 log += (f"End of iteration {i + 1} - New best fitness: {best_fitness}") + "\n"
+                runs = i + 1
                 break 
             
             graph += [best_fitness]
@@ -85,4 +88,5 @@ def steepestascent(cubelist : list[int] = None) -> dict:
         print("An error occurred:", e)
         cube.print()
 
+    log = f"Itterations : {runs} |\n" + log
     return standard_return(first_cube, cube, graph, execution_time, log = log)

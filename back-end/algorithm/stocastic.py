@@ -14,6 +14,7 @@ def stocastic(cubelist : list[int] = None, max_iteration : int = None) -> dict:
     #return values
     start_time = time.time()
     log : str = ""
+    runs : int = 0
     
     if cubelist != None:
         cube: Magicube = Magicube(n,custom=cubelist)
@@ -68,6 +69,7 @@ def stocastic(cubelist : list[int] = None, max_iteration : int = None) -> dict:
             if not found_better:
                 print(f"End of iteration {i + 1} - No better solution found, stopping.")
                 log += (f"End of iteration {i + 1} - No better solution found, stopping.") + "\n"
+                runs = i + 1
                 break
             else:
                 print(f"End of iteration {i + 1} - New fitness: {current_fitness}")
@@ -87,5 +89,7 @@ def stocastic(cubelist : list[int] = None, max_iteration : int = None) -> dict:
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Execution time: {execution_time:.2f} seconds")
+    
+    log = f"Itterations : {runs} |\n" + log
 
     return standard_return(first_cube, cube, graph, execution_time, log = log)
