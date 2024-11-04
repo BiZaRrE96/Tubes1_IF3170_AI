@@ -56,21 +56,6 @@ def run(cl : list[Magicube], itterations : int ,method, report : list = None):
         report += [report_avg_cubes(cubes)]
     print("=====")
 
-#use samples if want to define samples, use sample count to tell how many to generate
-def run_FE(itterations : int, samples : list[list[int]] = None, sample_count = 4):
-    cubes : list[Magicube]
-    if samples != None:
-        for sample in samples:
-            cubes += [Magicube(5,custom=sample)]
-    else:
-        cubes = [Magicube(5) for i in range(sample_count)]
-    
-    report : list = None
-    
-    best_first = max_fitness(cubes)
-    
-    for i in range(itterations):
-        cubes = run
 
 def test_wrapper():
     ###START
