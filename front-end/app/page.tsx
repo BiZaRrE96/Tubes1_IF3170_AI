@@ -41,10 +41,10 @@ export default function Home() {
   // Hill-Climbing with Sideways Move
   const [maxSidewaysMoves, setMaxSidewaysMoves] = useState(0)
   // Random Start Hill-Climbing
-  const [maxRestart, setMaxRestart] = useState(0)
+  const [maxRestart, setMaxRestart] = useState<number>(0)
   // Genetic Algorithm
-  const [populasi, setPopulasi] = useState(0)
-  const [iterasi, setIterasi] = useState(0)
+  const [populasi, setPopulasi] = useState<number>(0)
+  const [iterasi, setIterasi] = useState<number>(0)
   const [logs, setLogs] = useState("")
   const [seconds, setSeconds] = useState(0);
 
@@ -277,7 +277,15 @@ export default function Home() {
                             <FormItem>
                               <FormLabel>Max Restart</FormLabel>
                               <FormControl>
-                                <Input {...field} className='bg-white/10' />
+                                <Input 
+                                  {...field}
+                                  type='number'
+                                  className='bg-white/10' 
+                                  onChange={(event) => { 
+                                    setMaxRestart(Number(event.target.value)); 
+                                    field.onChange(event); 
+                                  }}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
@@ -295,7 +303,15 @@ export default function Home() {
                            <FormItem>
                              <FormLabel>Polulation</FormLabel>
                              <FormControl>
-                               <Input {...field} className='bg-white/10' />
+                              <Input 
+                                {...field}
+                                type='number'
+                                className='bg-white/10' 
+                                onChange={(event) => { 
+                                  setPopulasi(Number(event.target.value)); 
+                                  field.onChange(event); 
+                                }}
+                              />
                              </FormControl>
                            </FormItem>
                          )}
@@ -307,7 +323,15 @@ export default function Home() {
                            <FormItem>
                              <FormLabel>Iteration</FormLabel>
                              <FormControl>
-                               <Input {...field} className='bg-white/10' />
+                             <Input 
+                                {...field}
+                                type='number'
+                                className='bg-white/10' 
+                                onChange={(event) => { 
+                                  setIterasi(Number(event.target.value)); 
+                                  field.onChange(event); 
+                                }}
+                              />
                              </FormControl>
                            </FormItem>
                          )}
