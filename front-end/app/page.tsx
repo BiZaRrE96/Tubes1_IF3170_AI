@@ -101,7 +101,6 @@ export default function Home() {
   const generateCubeByAlgorithm = async (algorithm: string) => {
     setIsAlgorithmLoading(true)
     setInitialCubeState(cubeResult)
-
     toast({
       title: "Searching...",
       description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
@@ -109,6 +108,7 @@ export default function Home() {
 
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
+      console.log(endpoint)
       const response = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: {
@@ -126,7 +126,6 @@ export default function Home() {
         setLogs(data.log)
         setExecutionTime(data.time)
         const newGraph = convertToChartData(data)
-        console.log(newGraph)
         setGraph(newGraph)
       }
       

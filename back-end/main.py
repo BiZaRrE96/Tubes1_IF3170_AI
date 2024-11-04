@@ -4,6 +4,7 @@ import random
 
 from algorithm.utils.magicube import generate_n_stack
 from algorithm.steepestascent import steepestascent
+from algorithm.stocastic import stocastic
 
 app = FastAPI()
 
@@ -21,9 +22,10 @@ async def steepest_ascent_hc(cube: List[int]):
     result = steepestascent(cube)
     return result
 
-@app.get("/stochastic-hill-climbing")
-async def stochastic_hc():
-    return
+@app.post("/stochastic-hill-climbing")
+async def stochastic_hc(cube: List[int]):
+    result = stocastic(cube)
+    return result
 
 @app.get("/hill-climbing-with-sideways-move")
 async def hc_with_sideways():

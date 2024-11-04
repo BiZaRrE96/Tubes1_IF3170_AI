@@ -25,7 +25,7 @@ def stocastic(cubelist : list[int] = None, max_iteration : int = None) -> dict:
     if max_iteration != None:
         pass
     else:
-        max_iteration = 8
+        max_iteration = 3
         print("Max itteration unset, setting to 8")
         log += "MAX ITTERATION UNSET\n"
 
