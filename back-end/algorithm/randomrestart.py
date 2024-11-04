@@ -29,7 +29,7 @@ def randomrestart(cubelist : list[int] = None, max_iteration : int = None, max_r
     if max_restarts != None:
         pass
     else:
-        max_restarts = 10
+        max_restarts = 100000
         print("Max restarts unset, setting to 10")
         log += "MAX RESTARTS UNSET\n"
 
