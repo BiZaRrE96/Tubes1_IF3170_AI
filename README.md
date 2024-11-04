@@ -38,7 +38,7 @@ Run BackEnd in Localhost 8000
 uv run fastapi dev main.py
 ```
 
-<h3 align="left">Development Tools</h3>
+<h3 align="left">Pembagian Tugas</h3>
 
 | NIM     | Kerja   |
 |:--------------------:|:---------:|
