@@ -85,7 +85,7 @@ export function ChartPlot({ graph }: any) {
               }
             />
             <Line
-              dataKey="visitors"
+              dataKey="Fitness Value"
               type="natural"
               stroke="white"
               strokeWidth={1}

@@ -108,17 +108,27 @@ export default function Home() {
 
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
-      console.log(endpoint)
+
+      let bodyToSend = JSON.stringify(cubeResult)
+      if (endpoint === "stochastic-hill-climbing") {
+        bodyToSend = JSON.stringify({
+          cube: cubeResult,
+          maxSidewaysMoves: maxSidewaysMoves
+        });
+      }
+
+      console.log("maxSidewaysMoves: ", maxSidewaysMoves)
+
+      console.log(bodyToSend)
       const response = await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(cubeResult)
+        body: bodyToSend
       })
 
       const data = await response.json()
-      console.log(data)
 
       if (data) {
         setCubeResult(data.end.cube)
@@ -295,7 +305,14 @@ export default function Home() {
                             <FormItem>
                               <FormLabel>Max Sideways Move</FormLabel>
                               <FormControl>
-                                <Input {...field} className='bg-white/10' />
+                                <Input 
+                                  {...field} 
+                                  className='bg-white/10' 
+                                  onChange={(event) => { 
+                                    setMaxSidewaysMoves(Number(event.target.value)); 
+                                    field.onChange(event); 
+                                  }}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
