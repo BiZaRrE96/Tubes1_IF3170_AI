@@ -16,6 +16,44 @@ def fitness(cube: m.Magicube) -> float:
         value += [temp]
     return -stdev(value)
 
+def deviation(cube: m.Magicube) -> float:
+    total_deviation: float = 0
+    magic_number: float = 315
+
+    # Menghitung penyimpangan untuk setiap baris
+    for x in range(cube.size):
+        for y in range(cube.size):
+            sum_row = sum(cube.get(x, y, z) for z in range(cube.size))
+            deviation = abs(sum_row - magic_number)
+            total_deviation += deviation
+
+    # Menghitung penyimpangan untuk setiap kolom
+    for y in range(cube.size):
+        for z in range(cube.size):
+            sum_column = sum(cube.get(x, y, z) for x in range(cube.size))
+            deviation = abs(sum_column - magic_number)
+            total_deviation += deviation
+
+    # Menghitung penyimpangan untuk setiap tiang
+    for x in range(cube.size):
+        for z in range(cube.size):
+            sum_pillar = sum(cube.get(x, y, z) for y in range(cube.size))
+            deviation = abs(sum_pillar - magic_number)
+            total_deviation += deviation
+
+    # Menghitung penyimpangan untuk setiap diagonal
+    # Diagonal dari sudut kiri atas ke kanan bawah
+    sum_diag1 = sum(cube.get(i, i, i) for i in range(cube.size))
+    deviation1 = abs(sum_diag1 - magic_number)
+    total_deviation += deviation1
+
+    # Diagonal dari sudut kiri bawah ke kanan atas
+    sum_diag2 = sum(cube.get(i, i, cube.size - i - 1) for i in range(cube.size))
+    deviation2 = abs(sum_diag2 - magic_number)
+    total_deviation += deviation2
+
+    return total_deviation
+
 finish : bool = False
 
 def bogo_search(size : int) -> None:
