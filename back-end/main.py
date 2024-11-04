@@ -15,6 +15,8 @@ async def generate_cube(n: int, straight: Optional[bool] = False):
     result = generate_n_stack(n, straight)
     return result
 
+@app.post("/generate-cube")
+
 @app.get("/steepest-ascent-hill-climbing")
 async def steepest_ascent_hc():
     return

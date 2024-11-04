@@ -11,6 +11,9 @@ import {
 import Title from './components/Title';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { geneticAlgorithm, geneticAlgorithmType, maxRestarts, maxRestartType, maxSidewaysMove, maxSidewaysMoveType } from '@/lib/schemas';
 
 export default function Home() {
   const { toast } = useToast()
@@ -21,20 +24,45 @@ export default function Home() {
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
   const [executionTime, setExecutionTime] = useState(0.00)
   // Hill-Climbing with Sideways Move
-  const [maxSidewayMoves, setMaxSidewayMoves] = useState(0)
+  const [maxSidewaysMoves, setMaxSidewaysMoves] = useState(0)
   // Random Start Hill-Climbing
   const [maxRestart, setMaxRestart] = useState(0)
   // Genetic Algorithm
   const [populasi, setPopulasi] = useState(0)
   const [iterasi, setIterasi] = useState(0)
 
+  const sidewaysForm = useForm<maxSidewaysMoveType>({
+    resolver: zodResolver(maxSidewaysMove),
+    defaultValues: {
+      maxSidewaysMove: 0
+    }
+  })
+
+  const randomRestartForm = useForm<maxRestartType>({
+    resolver: zodResolver(maxRestarts),
+    defaultValues: {
+      maxRestart: 0
+    }
+  })
+
+  const geneticForm = useForm<geneticAlgorithmType>({
+    resolver: zodResolver(geneticAlgorithm),
+    defaultValues: {
+      populasi: 0,
+      iterasi: 0
+    }
+  })
+
   const generateCube = async () => {
     setLoading(true)
     setAlgorithm("")
     try {
       const n = 125;
+      console.log("FETCHING...")
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
+      console.log("RESPONSE:", response)
       const data = await response.json()
+      console.log("RES YG UDAH JSON", data)
       setCubeResult(data)  
       toast({
         title: "Cube Generated!",
@@ -205,20 +233,20 @@ export default function Home() {
             </div>
             {
               algorithm && (
-                <div>
+                <div className='text-white'>
                   { algorithm === "Hill-Climbing With Sideways Move" && (
                     <div>
-                    
+                      HC Side ways
                     </div>
                   )}
                   { algorithm === "Random Start Hill-Climbing" && (
                     <div>
-                    
+                      Random Start HC
                     </div>
                   )}
                   { algorithm === "Genetic Algorithm" && (
                     <div>
-                    
+                      Genetic Algorithm
                     </div>
                   )}
                 </div>
