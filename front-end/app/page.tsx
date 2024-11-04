@@ -439,7 +439,7 @@ export default function Home() {
           {/* Result Box */}
           <div className='w-full border-t-2 border-white/25 mt-4 py-4 flex flex-col items-start'>
             <p>Time Execition : {executionTime}</p>
-            <p>Objective Function Value : {finalObjValue} </p>
+            <p>Final Objective Function Value : {finalObjValue} </p>
           </div>
         </ResizablePanel>
         <ResizableHandle className='z-20 w-[1px] bg-white h-[575px] hidden md:block' withHandle />
