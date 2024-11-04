@@ -24,11 +24,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { ChartPlot } from './components/ChartPlot';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export default function Home() {
   const { toast } = useToast()
   const [algorithm, setAlgorithm] = useState("")
   const [cubeResult, setCubeResult] = useState();
+  const [submitted, setSubmitted] = useState(false);
   const [initialCubeState, setInitialCubeState] = useState();
   const [loading, setLoading] = useState(false);
   const [cubeState, setCubeState] = useState<"Initial" | "Final">("Initial");
@@ -42,27 +45,18 @@ export default function Home() {
   // Genetic Algorithm
   const [populasi, setPopulasi] = useState(0)
   const [iterasi, setIterasi] = useState(0)
+  const [logs, setLogs] = useState("")
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
-    defaultValues: {
-      maxSidewaysMove: 0
-    }
   })
 
   const randomRestartForm = useForm<maxRestartType>({
     resolver: zodResolver(maxRestarts),
-    defaultValues: {
-      maxRestart: 0
-    }
   })
 
   const geneticForm = useForm<geneticAlgorithmType>({
     resolver: zodResolver(geneticAlgorithm),
-    defaultValues: {
-      populasi: 0,
-      iterasi: 0
-    }
   })
 
   const generateCube = async () => {
@@ -110,6 +104,7 @@ export default function Home() {
       })
     } finally {
       // setIsAlgorithmLoading(false)
+      setSubmitted(true)
     }
   }
 
@@ -137,7 +132,7 @@ export default function Home() {
 
       {/* Algorithm */}
       <ResizablePanelGroup direction={direction} className='flex flex-row items-start justify-between w-full gap-x-8'>
-        <ResizablePanel defaultSize={40} className='text-white flex flex-col items-start h-[550px] overflow-y-scroll'>
+        <ResizablePanel defaultSize={46} className='text-white flex flex-col items-start h-[575px] overflow-y-scroll'>
           <h3 className='text-2xl font-bold'>Choose The Algorithm 🚀</h3>
           {/* Choose Algoritma */}
           <div className='py-4 flex items-center gap-x-4 gap-y-4 flex-wrap z-20'>
@@ -322,37 +317,55 @@ export default function Home() {
             <p>Objective Function Value : </p>
           </div>
         </ResizablePanel>
-        <ResizableHandle className='z-20 w-[1px] bg-white h-[550px] hidden md:block' withHandle />
+        <ResizableHandle className='z-20 w-[1px] bg-white h-[575px] hidden md:block' withHandle />
         
         {/* Magic Cube Display */}
-        <ResizablePanel defaultSize={60} className='hidden md:block border-2 relative border-white/10 rounded-lg p-0 margin-0 h-[550px]'>
-          <div className='w-full flex items-center justify-center gap-x-4 absolute top-4'>
-            <Button 
-              variant={"outline"}
-              className={cn(
-                'bg-white/10 text-white',
-                cubeState === "Initial" && "bg-white/50"
-              )} 
-              onClick={() => setCubeState("Initial")}
-            >
-              Initial State
-            </Button>
-            <Button 
-              variant={"outline"}
-              className={cn(
-                'bg-white/10 text-white',
-                cubeState === "Final" && "bg-white/50"
-              )} 
-              onClick={() => setCubeState("Final")}
-            >
-              Final State
-            </Button>
-          </div>
+        <ResizablePanel defaultSize={54} className='hidden md:block border-2 relative border-white/10 rounded-lg p-0 margin-0 h-[575px]'>
+        {
+          submitted && (
+            <div className='w-full flex items-center justify-center gap-x-4 absolute top-4 right-4 z-20'>
+              <Button 
+                variant={"outline"}
+                className={cn(
+                  'bg-white/10 text-white',
+                  cubeState === "Initial" && "bg-white/50"
+                )}
+                size={"sm"}
+                onClick={() => setCubeState("Initial")}
+              >
+                Initial State
+              </Button>
+              <Button 
+                variant={"outline"}
+                className={cn(
+                  'bg-white/10 text-white',
+                  cubeState === "Final" && "bg-white/50"
+                )}
+                size={"sm"}
+                onClick={() => setCubeState("Final")}
+              >
+                Final State
+              </Button>
+            </div>
+          )
+        }
           <MagicCube numbers={cubeResult} />
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      Result
+      {/* Display Chart */}
+      <div className='py-4' />
+      <div className='w-full flex justify-between gap-x-4 mb-12 border-2 border-white/10 rounded-xl'>
+        <ChartPlot />
+        <Card className='text-white w-full bg-transparent border-none'>
+          <CardHeader className='font-bold'>
+            Logs
+          </CardHeader>
+          <CardContent className='text-white/80 font-light'>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vestibulum sodales rhoncus. Sed eu lorem molestie, ornare lacus sit amet, auctor tortor. Quisque ultricies nisl non ante rutrum varius. Duis tempus rutrum luctus. Donec in sollicitudin elit. Nulla a tellus euismod, vehicula diam at, lacinia lectus. Phasellus ut ultricies felis. Nulla facilisi. Duis non lacus nisl. Fusce mi magna, pulvinar sed odio nec, mollis porttitor massa. Aliquam efficitur lorem non augue porta, ac facilisis leo efficitur. Phasellus imperdiet dui erat, in consectetur massa sagittis eget. Suspendisse sagittis erat tellus, sed tempus ligula eleifend nec. Morbi laoreet purus vel ex viverra placerat.
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }
