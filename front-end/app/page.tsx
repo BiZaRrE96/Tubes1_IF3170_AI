@@ -29,23 +29,24 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export default function Home() {
   const { toast } = useToast()
-  const [algorithm, setAlgorithm] = useState("")
+  const [algorithm, setAlgorithm] = useState<string>("")
   const [cubeResult, setCubeResult] = useState();
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const [initialCubeState, setInitialCubeState] = useState();
   const [loading, setLoading] = useState(false);
   const [cubeState, setCubeState] = useState<"Initial" | "Final">("Initial");
-  const [isAlgorithmLoading, setIsAlgorithmLoading] = useState(false)
+  const [isAlgorithmLoading, setIsAlgorithmLoading] = useState<boolean>(false)
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
-  const [executionTime, setExecutionTime] = useState(0.00)
+  const [executionTime, setExecutionTime] = useState<number>(0.00)
   // Hill-Climbing with Sideways Move
-  const [maxSidewaysMoves, setMaxSidewaysMoves] = useState(0)
+  const [maxSidewaysMoves, setMaxSidewaysMoves] = useState<number>(0)
   // Random Start Hill-Climbing
-  const [maxRestart, setMaxRestart] = useState(0)
+  const [maxRestart, setMaxRestart] = useState<number>(0)
   // Genetic Algorithm
-  const [populasi, setPopulasi] = useState(0)
-  const [iterasi, setIterasi] = useState(0)
-  const [logs, setLogs] = useState("")
+  const [populasi, setPopulasi] = useState<number>(0)
+  const [iterasi, setIterasi] = useState<number>(0)
+  const [logs, setLogs] = useState<string>("")
+  const [seconds, setSeconds] = useState<number>(0);
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
@@ -62,6 +63,7 @@ export default function Home() {
   const generateCube = async () => {
     setLoading(true)
     setAlgorithm("")
+    setSeconds(0)
     try {
       const n = 125;
       const response = await fetch(`/api/generate-cube?n=${n}&straight=false`)
@@ -83,12 +85,14 @@ export default function Home() {
 
   const generateCubeByAlgorithm = async (algorithm: string) => {
     setIsAlgorithmLoading(true)
+    setInitialCubeState(cubeResult)
     toast({
       title: "Searching...",
       description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
     })
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
+      console.log(endpoint)
       const response = await fetch(`/api/${endpoint}`)
       const data = await response.json()
       // Set cube result
@@ -102,6 +106,7 @@ export default function Home() {
     } finally {
       setIsAlgorithmLoading(false)
       setSubmitted(true)
+      setSeconds(0)
     }
   }
 
@@ -121,6 +126,19 @@ export default function Home() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    let timer: any;
+    if (isAlgorithmLoading) {
+      timer = setInterval(() => {
+        setSeconds(prevSeconds => prevSeconds + 1);
+      }, 1000);
+    } else {
+      setSeconds(0); 
+    }
+
+    return () => clearInterval(timer);
+  }, [isAlgorithmLoading]);
 
   return (
     <main className="w-full wrapper space-y-4 flex flex-col items-center transition-all">
@@ -260,7 +278,15 @@ export default function Home() {
                             <FormItem>
                               <FormLabel>Max Restart</FormLabel>
                               <FormControl>
-                                <Input {...field} className='bg-white/10' />
+                                <Input 
+                                  {...field}
+                                  type='number'
+                                  className='bg-white/10' 
+                                  onChange={(event) => { 
+                                    setMaxRestart(Number(event.target.value)); 
+                                    field.onChange(event); 
+                                  }}
+                                />
                               </FormControl>
                             </FormItem>
                           )}
@@ -278,7 +304,15 @@ export default function Home() {
                            <FormItem>
                              <FormLabel>Polulation</FormLabel>
                              <FormControl>
-                               <Input {...field} className='bg-white/10' />
+                              <Input 
+                                {...field}
+                                type='number'
+                                className='bg-white/10' 
+                                onChange={(event) => { 
+                                  setPopulasi(Number(event.target.value)); 
+                                  field.onChange(event); 
+                                }}
+                              />
                              </FormControl>
                            </FormItem>
                          )}
@@ -290,7 +324,15 @@ export default function Home() {
                            <FormItem>
                              <FormLabel>Iteration</FormLabel>
                              <FormControl>
-                               <Input {...field} className='bg-white/10' />
+                             <Input 
+                                {...field}
+                                type='number'
+                                className='bg-white/10' 
+                                onChange={(event) => { 
+                                  setIterasi(Number(event.target.value)); 
+                                  field.onChange(event); 
+                                }}
+                              />
                              </FormControl>
                            </FormItem>
                          )}
@@ -306,11 +348,20 @@ export default function Home() {
           {algorithm && (
             <Button 
               disabled={isAlgorithmLoading} 
-              className='mt-2 w-full z-20 max-w-[200px]' 
+              className='mt-2 w-full z-20 max-w-[200px] flex gap-x-2' 
               variant={"secondary"}
               onClick={() => {generateCubeByAlgorithm(algorithm)}}
             >
-              Search
+              {
+                !isAlgorithmLoading && (
+                  <span>Search</span>
+                )
+              }
+              { 
+                isAlgorithmLoading && (
+                  <span>Searching {seconds}s</span>
+                )
+              } 
             </Button>
           )}
 
@@ -365,7 +416,7 @@ export default function Home() {
             Logs
           </CardHeader>
           <CardContent className='text-white/80 font-light'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vestibulum sodales rhoncus. Sed eu lorem molestie, ornare lacus sit amet, auctor tortor. Quisque ultricies nisl non ante rutrum varius. Duis tempus rutrum luctus. Donec in sollicitudin elit. Nulla a tellus euismod, vehicula diam at, lacinia lectus. Phasellus ut ultricies felis. Nulla facilisi. Duis non lacus nisl. Fusce mi magna, pulvinar sed odio nec, mollis porttitor massa. Aliquam efficitur lorem non augue porta, ac facilisis leo efficitur. Phasellus imperdiet dui erat, in consectetur massa sagittis eget. Suspendisse sagittis erat tellus, sed tempus ligula eleifend nec. Morbi laoreet purus vel ex viverra placerat.
+            {logs}
           </CardContent>
         </Card>
       </div>

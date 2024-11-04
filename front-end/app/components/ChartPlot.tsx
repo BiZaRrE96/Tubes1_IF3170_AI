@@ -60,7 +60,7 @@ export function ChartPlot() {
     <Card className="bg-transparent w-full border-none">
       <CardHeader>
         <CardTitle className="text-white">Objective Function Value</CardTitle>
-        <CardDescription className="text-white">Plot of the objective function value against the number of iterations that have been passed</CardDescription>
+        <CardDescription className="text-white">Plot of the objective function value against the number of iterations</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="text-white max-h-[350px] bor">
