@@ -46,6 +46,7 @@ export default function Home() {
   const [populasi, setPopulasi] = useState(0)
   const [iterasi, setIterasi] = useState(0)
   const [logs, setLogs] = useState("")
+  const [seconds, setSeconds] = useState(0);
 
   const sidewaysForm = useForm<maxSidewaysMoveType>({
     resolver: zodResolver(maxSidewaysMove),
@@ -83,12 +84,14 @@ export default function Home() {
 
   const generateCubeByAlgorithm = async (algorithm: string) => {
     setIsAlgorithmLoading(true)
+    setInitialCubeState(cubeResult)
     toast({
       title: "Searching...",
       description: `Search for Diagonal Magic Cube Solutions with ${algorithm}`
     })
     try {
       const endpoint = algorithm.toLowerCase().replace(/\s+/g, "-")
+      console.log(endpoint)
       const response = await fetch(`/api/${endpoint}`)
       const data = await response.json()
       // Set cube result
@@ -102,6 +105,7 @@ export default function Home() {
     } finally {
       setIsAlgorithmLoading(false)
       setSubmitted(true)
+      setSeconds(0)
     }
   }
 
@@ -121,6 +125,19 @@ export default function Home() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    let timer: any;
+    if (isAlgorithmLoading) {
+      timer = setInterval(() => {
+        setSeconds(prevSeconds => prevSeconds + 1);
+      }, 1000);
+    } else {
+      setSeconds(0); // Reset ketika loading selesai
+    }
+
+    return () => clearInterval(timer); // Clear interval saat komponen unmount atau loading selesai
+  }, [isAlgorithmLoading]);
 
   return (
     <main className="w-full wrapper space-y-4 flex flex-col items-center transition-all">
@@ -306,11 +323,20 @@ export default function Home() {
           {algorithm && (
             <Button 
               disabled={isAlgorithmLoading} 
-              className='mt-2 w-full z-20 max-w-[200px]' 
+              className='mt-2 w-full z-20 max-w-[200px] flex gap-x-2' 
               variant={"secondary"}
               onClick={() => {generateCubeByAlgorithm(algorithm)}}
             >
-              Search
+              {
+                !isAlgorithmLoading && (
+                  <span>Search</span>
+                )
+              }
+              { 
+                isAlgorithmLoading && (
+                  <span>Searching {seconds}s</span>
+                )
+              } 
             </Button>
           )}
 
@@ -365,7 +391,7 @@ export default function Home() {
             Logs
           </CardHeader>
           <CardContent className='text-white/80 font-light'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vestibulum sodales rhoncus. Sed eu lorem molestie, ornare lacus sit amet, auctor tortor. Quisque ultricies nisl non ante rutrum varius. Duis tempus rutrum luctus. Donec in sollicitudin elit. Nulla a tellus euismod, vehicula diam at, lacinia lectus. Phasellus ut ultricies felis. Nulla facilisi. Duis non lacus nisl. Fusce mi magna, pulvinar sed odio nec, mollis porttitor massa. Aliquam efficitur lorem non augue porta, ac facilisis leo efficitur. Phasellus imperdiet dui erat, in consectetur massa sagittis eget. Suspendisse sagittis erat tellus, sed tempus ligula eleifend nec. Morbi laoreet purus vel ex viverra placerat.
+            {logs}
           </CardContent>
         </Card>
       </div>
